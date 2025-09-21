@@ -5,27 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="style201.css">
-<script type="module">
 
-// Import the functions you need from the SDKs you need
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+        const firebaseConfig = {
+          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+          authDomain: "edvore-b11b7.firebaseapp.com",
+          projectId: "edvore-b11b7",
+          storageBucket: "edvore-b11b7.appspot.com",
+          messagingSenderId: "239809584061",
+          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+        };
 
-// TODO: Add SDKs for Firebase products that you want to use
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-// https://firebase.google.com/docs/web/setup#available-libraries
+        window.signup = function() {
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
 
-// Your web app's Firebase configuration
+          createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+              document.getElementById('message').innerText = "User signed up!";
+            })
+            .catch(error => {
+              document.getElementById('message').innerText = error.message;
+            });
+        }
 
-const firebaseConfig = {
+        window.login = function() {
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
 
-}; apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0", authDomain: "edvore-b11b7.firebaseapp.com", projectId: "edvore-b11b7", storageBucket: "edvore-b11b7.firebasestorage.app", messagingSender Id: "239809584061", appId: "1:239809584061:web: a20da5cfa66a347c0fd0d4"
-
-// Initialize Firebase
-
-const app = initializeApp(firebaseConfig);
-
- </script>
+          signInWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+              document.getElementById('message').innerText = "Logged in!";
+            })
+            .catch(error => {
+              document.getElementById('message').innerText = error.message;
+            });
+        }
+    </script>
 </head>
 <body>
 <h3>Login</h3>
@@ -34,36 +56,37 @@ const app = initializeApp(firebaseConfig);
 <button onclick="signup()">Sign Up</button>
 <button onclick="login()">Login</button>
 <p id="message"></p>
-    <div class="login-container">
-        <div class="login-form">
-            <div class="logo">
-                <img src="logo.jpeg" alt="Logo" id="logo">
+
+<div class="login-container">
+    <div class="login-form">
+        <div class="logo">
+            <img src="logo.jpeg" alt="Logo" id="logo">
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>  
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
             </div>
 
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="username">Username</label>  
-                    <input type="text" id="username" name="username" required placeholder="Enter your username">
-                </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
 
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
-                </div>
+            <div class="remember-group">
+                <label for="remember">
+                    <input type="checkbox" id="remember" name="remember"> Remember me
+                </label>
+            </div>
 
-                <div class="remember-group">
-                    <label for="remember">
-                        <input type="checkbox" id="remember" name="remember"> Remember me
-                    </label>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" id="loginButton">Login</button>
-                </div>
-            </form>
-        </div>
+            <div class="button-group">
+                <button type="submit" id="loginButton">Login</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
