@@ -5,256 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>History Quiz</title>
  <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #E0E0E0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .menu-container {
-            background-color: black;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            color: #ffffff;
-        }
-
-        h3 {
-            font-size: 1.6em;
-            color: #dcdcdc;
-            margin-bottom: 20px;
-        }
-
-        .no-bullets {
-            list-style-type: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-
-        .no-bullets li {
-            margin: 10px 0;
-            font-size: 1.2em;
-            padding: 10px;
-            background-color: #333333;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .no-bullets li:hover {
-            background-color: #555555;
-        }
-        .feedback {
-            position: fixed;
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #2d7b36;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            z-index: 100;
-        }
-
-        .progress {
-            font-size: 1.2em;
-            margin-top: 10px;
-            color:  #e0e0e0;
-        }
-        nav ul {
-            list-style-type: none;
-            margin-top: 20px;
-        }
-
-        nav ul li {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        nav ul li a {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(145deg, #56ccf2, #2f80ed);
-            color: white;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            transform: scale(1.1);
-            background: linear-gradient(145deg, #2f80ed, #56ccf2);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        nav ul li a:active {
-            transform: scale(1);
-        }
-
-        .reset-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #FF6347;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .reset-btn:hover {
-            background-color: #e55347;
-        }
-       </style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+        .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+        h1 { font-size:2.5em; color:#ffffff; }
+        h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+        .no-bullets { list-style:none; padding:0; margin:20px 0; }
+        .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
+        .no-bullets li:hover { background-color:#555; }
+        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+        .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
+        nav ul { list-style:none; margin-top:20px; }
+        nav ul li { margin-top:20px; text-align:center; }
+        nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
+        nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
+        .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+        .reset-btn:hover { background-color:#e55347; }
+        .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+        .submit-btn:hover { background-color:#218838; }
+</style>
 </head>
 <body>
 
 <div class="menu-container">
     <h1>History</h1>
     <h3 id="question"></h3> 
-    <ul class="no-bullets">
-        <li id="a" onclick="myFunction('a')"></li>
-        <li id="b" onclick="myFunction('b')"></li>
-        <li id="c" onclick="myFunction('c')"></li>
+    <ul class="no-bullets" id="answers-list">
+        <li id="a" onclick="chooseAnswer('a')"></li>
+        <li id="b" onclick="chooseAnswer('b')"></li>
+        <li id="c" onclick="chooseAnswer('c')"></li>
     </ul>
     <div id="progress" class="progress"></div>
-    <button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
+    <button id="reset" class="reset-btn" onclick="resetQuiz()">Restart Quiz</button>
+    <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+        // Firebase config (use your existing config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+            authDomain: "edvore-b11b7.firebaseapp.com",
+            databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+            projectId: "edvore-b11b7",
+            storageBucket: "edvore-b11b7.appspot.com",
+            messagingSenderId: "239809584061",
+            appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
 
     <script>
         let index = 0;
-        let quest = document.getElementById("question");
-        
-        var questions = [
-            {
-                quest: "1. Who was the ancient Egyptian pharaoh who built the Great Pyramid of Giza?",
-                a: "Khufu",
-                b: "Egyptian",
-                c: "Sneferu",
-                correct: "a"
-            },
-            {
-                quest: "2. The Treaty of Westphalia marked the end of which European conflict in 1648?",
-                a: "The 20 years' war",
-                b: "The eighty years' war",
-                c: "The thirty years' war",
-                correct: "c"
-            },
-            {
-                quest: "3. The ancient city of Pompeii was destroyed by the eruption of which volcano in 79 CE?",
-                a: "Mount Vesuvius",
-                b: "Mount St. Helens",
-                c: "Mount Fuji",
-                correct: "a"
-            },
-            {
-                quest: "4. Who was the leader of the Chinese Communist Party during the Chinese Civil War?",
-                a: "Deng Xiaoping",
-                b: "Mao Zedong",
-                c: "Joseph Stalin",
-                correct: "b"
-            },
-            {
-                quest: "5. The Rosetta Stone was instrumental in deciphering which ancient language?",
-                a: "Sumerian cuneiform",
-                b: "Demotic script",
-                c: "Hieroglyphics",
-                correct: "c"
-            },
-            {
-                quest: "6. The Battle of Hastings took place in which year and in which country?",
-                a: "1066, England",
-                b: "1755, France",
-                c: "1050, Japan",
-                correct: "a"
-            },
-            {
-                quest: "7. Who was the Roman general who crossed the Rubicon River and sparked a civil war in 49 BCE?",
-                a: "Julius Caesar",
-                b: "Mark Antony",
-                c: "Napoleon Bonaparte",
-                correct: "a"
-            },
-            {
-                quest: "8. The Magna Carta was signed by which English king in 1215?",
-                a: "King Henry VIII",
-                b: "King John",
-                c: "Robin Hood",
-                correct: "b"
-            },
-            {
-                quest: "9. What did Howard carter and the researchers gain in the discovery of Tutankhamens tomb?",
-                a: "the discovery of the tomb reaveled ancient Egyptian treasures and insights of the ancient Egyptians culture",
-                b: "they gained fame and wealth",
-                c: "they gained money and expensive products",
-                correct: "a"
-            },
-            {
-                quest: "10. The Berlin Wall fell in which year, marking a significant event in modern European history?",
-                a: "1989",
-                b: "2000",
-                c: "1856",
-                correct: "a"
-            }
+        const quest = document.getElementById("question");
+        const progress = document.getElementById("progress");
+        const userAnswers = [];
+        const answersList = document.getElementById("answers-list");
+
+        const questions = [
+            { quest: "1. Who was the ancient Egyptian pharaoh who built the Great Pyramid of Giza?", a: "Khufu", b: "Egyptian", c: "Sneferu", correct: "a" },
+            { quest: "2. The Treaty of Westphalia marked the end of which European conflict in 1648?", a: "The 20 years' war", b: "The eighty years' war", c: "The thirty years' war", correct: "c" },
+            { quest: "3. The ancient city of Pompeii was destroyed by the eruption of which volcano in 79 CE?", a: "Mount Vesuvius", b: "Mount St. Helens", c: "Mount Fuji", correct: "a" },
+            { quest: "4. Who was the leader of the Chinese Communist Party during the Chinese Civil War?", a: "Deng Xiaoping", b: "Mao Zedong", c: "Joseph Stalin", correct: "b" },
+            { quest: "5. The Rosetta Stone was instrumental in deciphering which ancient language?", a: "Sumerian cuneiform", b: "Demotic script", c: "Hieroglyphics", correct: "c" },
+            { quest: "6. The Battle of Hastings took place in which year and in which country?", a: "1066, England", b: "1755, France", c: "1050, Japan", correct: "a" },
+            { quest: "7. Who was the Roman general who crossed the Rubicon River and sparked a civil war in 49 BCE?", a: "Julius Caesar", b: "Mark Antony", c: "Napoleon Bonaparte", correct: "a" },
+            { quest: "8. The Magna Carta was signed by which English king in 1215?", a: "King Henry VIII", b: "King John", c: "Robin Hood", correct: "b" },
+            { quest: "9. What did Howard Carter and the researchers gain in the discovery of Tutankhamens tomb?", a: "the discovery of the tomb reaveled ancient Egyptian treasures and insights of the ancient Egyptians culture", b: "they gained fame and wealth", c: "they gained money and expensive products", correct: "a" },
+            { quest: "10. The Berlin Wall fell in which year, marking a significant event in modern European history?", a: "1989", b: "2000", c: "1856", correct: "a" }
         ];
 
-              initQuest();  
         function initQuest() {
             quest.innerHTML = questions[index].quest;
             document.getElementById("a").innerHTML = "A) " + questions[index].a;
             document.getElementById("b").innerHTML = "B) " + questions[index].b;
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
-            updateProgress();
-        }
-        function updateProgress() {
             progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
         }
 
-        function myFunction(answer) {
-            if (answer === questions[index].correct) {
-                showFeedback("Correct!");
-                index++;
-                if (index >= questions.length) {
-                    showFeedback("Congratulations! You've finished the quiz.");
-                    document.getElementById("reset").style.display = "block";
-                } else {
-                    initQuest();
-                }
+        function chooseAnswer(answer) {
+            userAnswers[index] = answer;
+            index++;
+            if (index < questions.length) {
+                initQuest();
             } else {
-                showFeedback("Wrong answer. Try again!");
+                endQuiz();
             }
         }
-        function showFeedback(message) {
-            let feedback = document.createElement("div");
-            feedback.innerHTML = message;
-            feedback.classList.add("feedback");
-            document.body.appendChild(feedback);
-            setTimeout(() => feedback.remove(), 2000);
+
+        function endQuiz() {
+            quest.innerHTML = "Quiz Completed!";
+            answersList.style.display = "none";
+            progress.style.display = "none";
+            document.getElementById("reset").style.display = "block";
+            document.getElementById("submit").style.display = "inline-block";
         }
+
         function resetQuiz() {
             index = 0;
+            userAnswers.length = 0;
+            answersList.style.display = "block";
+            progress.style.display = "block";
             document.getElementById("reset").style.display = "none";
+            document.getElementById("submit").style.display = "none";
             initQuest();
         }
+
+        function submitQuiz() {
+            const submissionRef = database.ref('history_quiz_submissions/' + Date.now());
+            submissionRef.set({ answers: userAnswers })
+            .then(() => {
+                alert("Quiz submitted successfully!");
+                window.location.href = "Subjects.html";
+            }).catch((error) => {
+                alert("Error submitting quiz: " + error);
+            });
+        }
+
+        window.onload = initQuest;
     </script>
 
     <nav>
@@ -266,4 +136,4 @@
 </div>
 
 </body>
-</html>
+    </html>
