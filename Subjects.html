@@ -66,6 +66,87 @@
             outline: none;
             box-shadow: 0 0 5px #56ccf2;
         }
+        
+#feedback-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2f80ed;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+    z-index: 1000;
+}
+
+#feedback-button:hover {
+    background: #56ccf2;
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+#feedback-modal {
+    display: none; /* hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+#feedback-content {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    color: white;
+    text-align: center;
+}
+
+#feedback-text {
+    width: 100%;
+    height: 100px;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    resize: none;
+}
+
+#send-feedback, #close-feedback {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#send-feedback {
+    background: #2f80ed;
+    color: white;
+}
+
+#send-feedback:hover {
+    background: #56ccf2;
+}
+
+#close-feedback {
+    background: #555;
+    color: white;
+}
+
+#close-feedback:hover {
+    background: #777;
+        }
 
         nav ul {
             list-style-type: none;
@@ -110,6 +191,76 @@
         </ul>
     </nav>
 </div>
+    <!-- Feedback Button -->
+<div id="feedback-button">💬 Send Feedback</div>
+
+<div id="feedback-modal">
+    <div id="feedback-content">
+        <h3>Send Feedback</h3>
+        <textarea id="feedback-text" placeholder="Type your feedback here..."></textarea>
+        <button id="send-feedback">Send</button>
+        <button id="close-feedback">Cancel</button>
+    </div>
+</div>
+    <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  // Your Firebase configuration (replace with your own)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // DOM Elements
+  const feedbackButton = document.getElementById('feedback-button');
+  const feedbackModal = document.getElementById('feedback-modal');
+  const closeFeedback = document.getElementById('close-feedback');
+  const sendFeedback = document.getElementById('send-feedback');
+  const feedbackText = document.getElementById('feedback-text');
+
+  // Show modal
+  feedbackButton.addEventListener('click', () => {
+    feedbackModal.style.display = 'flex';
+  });
+
+  // Close modal
+  closeFeedback.addEventListener('click', () => {
+    feedbackModal.style.display = 'none';
+    feedbackText.value = '';
+  });
+
+  // Send feedback to Firebase
+  sendFeedback.addEventListener('click', () => {
+    const text = feedbackText.value.trim();
+    if(text !== "") {
+      const feedbackRef = database.ref('feedbacks');
+      feedbackRef.push({
+        message: text,
+        timestamp: Date.now()
+      }).then(() => {
+        alert("Feedback sent! Thank you.");
+        feedbackModal.style.display = 'none';
+        feedbackText.value = '';
+      }).catch(err => {
+        alert("Error sending feedback: " + err);
+      });
+    } else {
+      alert("Please enter feedback before sending.");
+    }
+  });
+    </script>
 
 </body>
 </html>
+
