@@ -117,7 +117,10 @@
         function submitQuiz() {
             const submissionRef = database.ref('Geography_Submissions/' + Date.now());
             submissionRef.set({ answers: userAnswers })
-            .then(() => { alert("Quiz submitted successfully!"); })
+            .then(() => {
+                // Redirect to Subjects page after successful submission
+                window.location.href = "Subjects.html";
+            })
             .catch((error) => { alert("Error submitting quiz: " + error); });
         }
 
@@ -125,4 +128,4 @@
     </script>
 </div>
 </body>
-</html>
+       </html>
