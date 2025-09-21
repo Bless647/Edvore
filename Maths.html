@@ -22,7 +22,7 @@
 <body>
 <div class="menu-container">
     <h1>Maths</h1>
-    <h3 id="question"></h3>
+    <h3 id="question"></h3> 
     <ul class="no-bullets" id="answers-list">
         <li id="a" onclick="chooseAnswer('a')"></li>
         <li id="b" onclick="chooseAnswer('b')"></li>
@@ -51,20 +51,20 @@
         let index = 0;
         const quest = document.getElementById("question");
         const progress = document.getElementById("progress");
-        const userAnswers = [];
         const answersList = document.getElementById("answers-list");
+        const userAnswers = [];
 
         const questions = [
-            { quest: "1. What is the value of x in 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
-            { quest: "2. Sum of interior angles of a triangle?", a: "360°", b: "90°", c: "180°", correct: "c" },
-            { quest: "3. Formula for area of a circle?", a: "A = πr²", b: "A = s²", c: "A = (b*h)/2", correct: "a" },
-            { quest: "4. Value of 7²?", a: "49", b: "21", c: "42", correct: "a" },
-            { quest: "5. Sum of numbers 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
-            { quest: "6. Volume of rectangular prism?", a: "V=L²H", b: "V=lwh", c: "A=πr²", correct: "b" },
-            { quest: "7. Solve x/4=9", a: "x=12", b: "x=21", c: "x=36", correct: "c" },
-            { quest: "8. Perimeter of square side 5?", a: "20", b: "21", c: "42", correct: "a" },
-            { quest: "9. Solve 5x-3=12", a: "x=2", b: "x=3", c: "x=3", correct: "c" },
-            { quest: "10. Product of 12*3?", a: "36", b: "21", c: "42", correct: "a" }
+            { quest:"1. Solve for x: 2x + 3 = 7", a:"x = 2", b:"x = 1", c:"x = 5", correct:"a" },
+            { quest:"2. Simplify: 3(x + 4) = ?", a:"3x + 4", b:"3x + 12", c:"x + 12", correct:"b" },
+            { quest:"3. Solve for y: 5y - 10 = 0", a:"y = 2", b:"y = -2", c:"y = 10", correct:"a" },
+            { quest:"4. What is 7 × 8?", a:"54", b:"56", c:"64", correct:"b" },
+            { quest:"5. Solve: x/3 = 9", a:"x = 27", b:"x = 3", c:"x = 12", correct:"a" },
+            { quest:"6. Evaluate: 4² + 3", a:"19", b:"16", c:"25", correct:"a" },
+            { quest:"7. Solve: 2x - 5 = 9", a:"x = 7", b:"x = 5", c:"x = 12", correct:"a" },
+            { quest:"8. Simplify: 6(2 + x)", a:"12 + 6x", b:"6x + 12", c:"12x + 6", correct:"b" },
+            { quest:"9. Solve: 3x + 4 = 19", a:"x = 5", b:"x = 6", c:"x = 7", correct:"a" },
+            { quest:"10. What is the value of 9 × 5?", a:"45", b:"40", c:"50", correct:"a" }
         ];
 
         function initQuest() {
@@ -79,37 +79,33 @@
             if(answer === questions[index].correct){
                 showFeedback("Correct!");
             } else {
-                showFeedback("Wrong answer!");
+                showFeedback("Wrong answer. Try again!");
             }
             userAnswers[index] = answer;
             index++;
             if(index < questions.length){
                 initQuest();
             } else {
-                endQuiz();
+                quest.innerHTML = "Math Quiz Completed!";
+                answersList.style.display = "none";
+                progress.style.display = "none";
+                document.getElementById("submit").style.display = "inline-block";
             }
         }
 
-        function showFeedback(message){
-            const fb = document.createElement("div");
-            fb.className="feedback";
-            fb.innerHTML=message;
-            document.body.appendChild(fb);
-            setTimeout(()=>fb.remove(),1500);
-        }
-
-        function endQuiz(){
-            quest.innerHTML="Quiz Completed!";
-            answersList.style.display="none";
-            progress.style.display="none";
-            document.getElementById("submit").style.display="inline-block";
+        function showFeedback(msg){
+            let feedback = document.createElement("div");
+            feedback.innerHTML = msg;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(()=>feedback.remove(),2000);
         }
 
         function submitQuiz(){
             const username = localStorage.getItem('username');
             if(!username){
                 alert("You must be logged in to submit!");
-                window.location.href="login.html";
+                window.location.href="index.html";
                 return;
             }
             const refDB = database.ref('Maths_Submission/'+Date.now());
@@ -118,8 +114,8 @@
             .catch((err)=>{alert("Error submitting quiz: "+err);});
         }
 
-        window.onload=initQuest;
+        window.onload = initQuest;
     </script>
 </div>
 </body>
-    </html>
+</html>
