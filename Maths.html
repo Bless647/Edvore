@@ -1,126 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta charset="UTF-8">
-<title>Maths Quiz</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background-color: #121212; color: #E0E0E0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
-.menu-container { background-color: black; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); text-align: center; width: 100%; max-width: 600px; }
-h1 { font-size: 2.5em; color: #ffffff; }
-h3 { font-size: 1.6em; color: #dcdcdc; margin-bottom: 20px; }
-.no-bullets { list-style-type: none; padding: 0; margin: 20px 0; }
-.no-bullets li { margin: 10px 0; font-size: 1.2em; padding: 10px; background-color: #333333; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; }
-.no-bullets li:hover { background-color: #555555; }
-.feedback { position: fixed; top: 10%; left: 50%; transform: translate(-50%, -50%); background-color: #2d7b36; color: white; padding: 15px; border-radius: 5px; font-size: 1.2em; z-index: 100; }
-.progress { font-size: 1.2em; margin-top: 10px; color: #e0e0e0; }
-nav ul { list-style-type: none; margin-top: 20px; }
-nav ul li { margin-top: 20px; text-align: center; }
-nav ul li a { display: inline-block; padding: 12px 30px; background: linear-gradient(145deg, #56ccf2, #2f80ed); color: white; font-size: 1.2em; font-weight: bold; text-decoration: none; border-radius: 8px; transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; }
-nav ul li a:hover { transform: scale(1.1); background: linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); }
-nav ul li a:active { transform: scale(1); }
-.reset-btn, .submit-btn { margin-top: 20px; padding: 10px 20px; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.reset-btn { background-color: #FF6347; }
-.reset-btn:hover { background-color: #e55347; }
-.submit-btn { background-color: #4CAF50; margin-left: 10px; }
-.submit-btn:hover { background-color: #45a049; }
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Maths Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .menu-container {
+            background-color: black;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: #dcdcdc;
+            margin-bottom: 20px;
+        }
+
+        .no-bullets {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .no-bullets li {
+            margin: 10px 0;
+            font-size: 1.2em;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .no-bullets li:hover {
+            background-color: #555555;
+        }
+
+        .feedback {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2d7b36;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            z-index: 100;
+        }
+
+        .progress {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color:  #e0e0e0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin-top: 20px;
+        }
+
+        nav ul li {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        nav ul li a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(145deg, #56ccf2, #2f80ed);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            transform: scale(1.1);
+            background: linear-gradient(145deg, #2f80ed, #56ccf2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a:active {
+            transform: scale(1);
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #e55347;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
 
 <div class="menu-container">
-<h1>Maths</h1>
-<h3 id="question"></h3> 
-<ul class="no-bullets">
-<li id="a" onclick="chooseAnswer('a')"></li>
-<li id="b" onclick="chooseAnswer('b')"></li>
-<li id="c" onclick="chooseAnswer('c')"></li>
-</ul>
-<div id="progress" class="progress"></div>
-<button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
-<button id="submit" class="submit-btn" style="display: none;" onclick="submitAnswers()">Submit Answers</button>
+    <h1>Maths</h1>
+    <h3 id="question"></h3> 
+    <ul class="no-bullets">
+        <li id="a" onclick="chooseAnswer('a')"></li>
+        <li id="b" onclick="chooseAnswer('b')"></li>
+        <li id="c" onclick="chooseAnswer('c')"></li>
+    </ul>
+    <div id="progress" class="progress"></div>
+    <button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
+    <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script>
+        let index = 0;
+        const quest = document.getElementById("question");
+        const progress = document.getElementById("progress");
+        const userAnswers = [];
 
- <script>
-    let index = 0;
-    const quest = document.getElementById("question");
-    const progress = document.getElementById("progress");
-    const answers = { a: null, b: null, c: null }; // For storing user's selections if needed
+        const questions = [
+            { quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
+            { quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
+            { quest: "3. What is the formula for the area of a circle?", a: "A = πr^2", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
+            { quest: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
+            { quest: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
+            { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
+            { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
+            { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
+            { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
+            { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
+        ];
 
-    const questions = [
-        { quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
-        { quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
-        { quest: "3. What is the formula for the area of a circle?", a: "A = πr^2", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
-        { quest: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
-        { quest: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
-        { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
-        { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
-        { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
-        { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
-        { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
-    ];
-
-    function initQuest() {
-        quest.innerHTML = questions[index].quest;
-        document.getElementById("a").innerHTML = "A) " + questions[index].a;
-        document.getElementById("b").innerHTML = "B) " + questions[index].b;
-        document.getElementById("c").innerHTML = "C) " + questions[index].c;
-        progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
-    }
-
-    function chooseAnswer(answer) {
-        answers[index] = answer; // Store the user's answer
-        if (answer === questions[index].correct) {
-            showFeedback("Correct!");
-        } else {
-            showFeedback("Wrong answer. Try again!");
+        function initQuest() {
+            quest.innerHTML = questions[index].quest;
+            document.getElementById("a").innerHTML = "A) " + questions[index].a;
+            document.getElementById("b").innerHTML = "B) " + questions[index].b;
+            document.getElementById("c").innerHTML = "C) " + questions[index].c;
+            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
         }
 
-        // Move to next question
-        index++;
-        if (index < questions.length) {
+        function chooseAnswer(answer) {
+            userAnswers[index] = answer;
+            if (answer === questions[index].correct) {
+                showFeedback("Correct!");
+            } else {
+                showFeedback("Wrong answer!");
+            }
+
+            index++;
+            if (index < questions.length) {
+                initQuest();
+            } else {
+                quest.innerHTML = "Quiz Completed!";
+                document.getElementById("a").innerHTML = "";
+                document.getElementById("b").innerHTML = "";
+                document.getElementById("c").innerHTML = "";
+                document.getElementById("reset").style.display = "block";
+                document.getElementById("submit").style.display = "inline-block";
+                progress.innerHTML = "";
+            }
+        }
+
+        function showFeedback(message) {
+            const feedback = document.createElement("div");
+            feedback.innerHTML = message;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 2000);
+        }
+
+        function resetQuiz() {
+            index = 0;
+            userAnswers.length = 0;
+            document.getElementById("reset").style.display = "none";
+            document.getElementById("submit").style.display = "none";
             initQuest();
-        } else {
-            document.getElementById("reset").style.display = "block";
-            document.getElementById("submit").style.display = "block";
-            quest.innerHTML = "Quiz Completed!";
-            document.getElementById("a").innerHTML = "";
-            document.getElementById("b").innerHTML = "";
-            document.getElementById("c").innerHTML = "";
-            progress.innerHTML = "";
         }
-    }
 
-    function showFeedback(message) {
-        const feedback = document.createElement("div");
-        feedback.innerHTML = message;
-        feedback.classList.add("feedback");
-        document.body.appendChild(feedback);
-        setTimeout(() => feedback.remove(), 2000);
-    }
+        function submitQuiz() {
+            console.log("User answers:", userAnswers);
+            // Here you can add Firebase submission logic using your firebaseConfig
+            alert("Quiz submitted! Check the console or Firebase.");
+        }
 
-    function resetQuiz() {
-        index = 0;
-        document.getElementById("reset").style.display = "none";
-        document.getElementById("submit").style.display = "none";
-        initQuest();
-    }
+        window.onload = function() {
+            initQuest();
+        }
+    </script>
 
-    // Make sure initQuest runs after the page fully loads
-    window.onload = function() {
-        initQuest();
-    }
- </script>
-
-<nav>
-<ul>
-<li><a href="Subjects.html">Back</a></li>
-</ul>
-</nav>
+    <nav>
+        <ul>
+            <li><a href="Subjects.html">Back</a></li>
+        </ul>
+    </nav>
 </div>
 
 </body>
-</html>
+ </html>
