@@ -23,7 +23,7 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Function to submit quiz answer
+        // Function to submit quiz answers later
         window.submitAnswer = function(questionId, answerOption) {
             const username = document.getElementById('username').value;
             if (!username) {
@@ -37,8 +37,6 @@
                 answer: answerOption,
                 timestamp: Date.now()
             });
-
-            alert("Answer submitted successfully!");
         }
     </script>
 </head>
@@ -71,17 +69,9 @@
                 <button type="submit" id="loginButton">Login</button>
             </div>
         </form>
-
-        <!-- Example Quiz Questions -->
-        <div class="quiz-container">
-            <h3>Question 1: 2 + 2 = ?</h3>
-            <button onclick="submitAnswer('Q1','A')">A) 3</button>
-            <button onclick="submitAnswer('Q1','B')">B) 4</button>
-            <button onclick="submitAnswer('Q1','C')">C) 5</button>
-            <button onclick="submitAnswer('Q1','D')">D) 6</button>
-        </div>
     </div>
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
