@@ -38,11 +38,9 @@
     <button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
     <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
-        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
             authDomain: "edvore-b11b7.firebaseapp.com",
@@ -72,7 +70,7 @@
             { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
             { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
             { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
-            { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
+            { quest: "9. What is 15 + 27?", a: "42", b: "32", c: "52", correct: "c" },
             { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
         ];
 
@@ -96,7 +94,7 @@
 
         function endQuiz() {
             quest.innerHTML = "Quiz Completed!";
-            answersList.style.display = "none"; // hide A/B/C
+            answersList.style.display = "none";
             progress.style.display = "none";
             document.getElementById("reset").style.display = "block";
             document.getElementById("submit").style.display = "inline-block";
@@ -113,11 +111,11 @@
         }
 
         function submitQuiz() {
-            const submissionRef = database.ref('quiz_submissions/' + Date.now());
+            const submissionRef = database.ref('Maths_submissions/' + Date.now());
             submissionRef.set({ answers: userAnswers })
             .then(() => {
                 alert("Quiz submitted successfully!");
-                window.location.href = "Subjects.html"; // Redirect after submission
+                window.location.href = "Subjects.html";
             }).catch((error) => {
                 alert("Error submitting quiz: " + error);
             });
@@ -133,4 +131,4 @@
     </nav>
 </div>
 </body>
-                                                                                            </html>
+    </html>
