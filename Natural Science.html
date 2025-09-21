@@ -75,14 +75,22 @@
         ];
 
         function initQuest() {
-            quest.innerHTML = questions[index].quest;
-            document.getElementById("a").innerHTML = "A) " + questions[index].a;
-            document.getElementById("b").innerHTML = "B) " + questions[index].b;
-            document.getElementById("c").innerHTML = "C) " + questions[index].c;
-            document.getElementById("d").innerHTML = "D) " + questions[index].d;
-            progress.innerHTML = `Question ${index+1} of ${questions.length}`;
-            backBtn.style.display = index > 0 ? "inline-block" : "none";
-            submitBtn.style.display = index === questions.length ? "inline-block" : "none";
+            if(index < questions.length){
+                quest.innerHTML = questions[index].quest;
+                document.getElementById("a").innerHTML = "A) " + questions[index].a;
+                document.getElementById("b").innerHTML = "B) " + questions[index].b;
+                document.getElementById("c").innerHTML = "C) " + questions[index].c;
+                document.getElementById("d").innerHTML = "D) " + questions[index].d;
+                answersList.style.display = "block";
+                progress.innerHTML = `Question ${index+1} of ${questions.length}`;
+                backBtn.style.display = index > 0 ? "inline-block" : "none";
+                submitBtn.style.display = "none";
+            } else {
+                quest.innerHTML = "Quiz Completed!";
+                answersList.style.display = "none";
+                backBtn.style.display = "none";
+                submitBtn.style.display = "inline-block";
+            }
         }
 
         function chooseAnswer(answer) {
@@ -93,18 +101,11 @@
                 showFeedback("Wrong!");
             }
             index++;
-            if(index < questions.length){
-                initQuest();
-            } else {
-                quest.innerHTML = "Quiz Completed!";
-                answersList.style.display = "none";
-                backBtn.style.display = "none";
-                submitBtn.style.display = "inline-block";
-            }
+            initQuest();
         }
 
         function previousQuestion() {
-            if(index>0){
+            if(index > 0){
                 index--;
                 initQuest();
             }
@@ -115,7 +116,7 @@
             feedback.innerHTML = message;
             feedback.classList.add("feedback");
             document.body.appendChild(feedback);
-            setTimeout(()=>feedback.remove(), 1500);
+            setTimeout(()=>feedback.remove(),1500);
         }
 
         function submitQuiz() {
