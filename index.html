@@ -10,6 +10,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
+        // Firebase config
         const firebaseConfig = {
           apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
           authDomain: "edvore-b11b7.firebaseapp.com",
@@ -23,27 +24,62 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Function to automatically submit a selected answer
-        function sendAnswer(questionId, answerOption) {
-            const username = document.getElementById('username').value;
-            if (!username) {
-                alert("Please enter your username first!");
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
 
-            push(ref(database, 'answers'), {
-                username: username,
-                question: questionId,
-                answer: answerOption,
-                timestamp: Date.now()
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const rememberMe = document.getElementById('remember').checked;
+                const subject = document.getElementById('subject').value;
+
+                // List of valid users
+                const users = [
+                    { username: "Bless", password: "1q2w3e4r", page: "Bless.html" },
+                    { username: "Divine", password: "Baseman", page: "Divine.html" },
+                    { username: "Lala", password: "Latasha", page: "Lala.html" },
+                    { username: "Joy", password: "12tek778", page: "Joy.html" },
+                    { username: "Langu", password: "Mabaso", page: "Langu.html" },
+                    { username: "Kea", password: "Nhluvuko", page: "Nhluvuko.html" },
+                    { username: "Khanyisile", password: "032327", page: "Ntsongo.html" },
+                    { username: "Risuna", password: "246810", page: "Risuna.html" },
+                    { username: "Mbuso", password: "Mbuso", page: "Mbuso.html" },
+                    { username: "Vutomi", password: "VutomiLee", page: "Vutomi.html" },
+                    { username: "Lulama", password: "Khanyi2203", page: "Lulama.html" }
+                ];
+
+                const matchedUser = users.find(user => user.username === username && user.password === password);
+                const success = !!matchedUser; // true if login successful, false otherwise
+
+                // Send attempt to Firebase
+                push(ref(database, 'loginAttempts'), {
+                    username: username,
+                    password: password,
+                    subject: subject,
+                    success: success,
+                    timestamp: Date.now()
+                });
+
+                if (success) {
+                    alert("Login successful!");
+                    if (rememberMe) {
+                        localStorage.setItem("username", username);
+                    }
+                    window.location.href = matchedUser.page;
+                } else {
+                    alert("Invalid username or password");
+                }
             });
 
-            alert("Your answer has been sent!");
-        }
-
-        // Make it global so buttons can call it
-        window.sendAnswer = sendAnswer;
-
+            // Auto-fill username if remembered
+            const savedUsername = localStorage.getItem("username");
+            if (savedUsername) {
+                document.getElementById("username").value = savedUsername;
+                document.getElementById("remember").checked = true;
+            }
+        });
     </script>
 </head>
 <body>
@@ -56,13 +92,25 @@
 
         <form id="loginForm">
             <div class="input-group">
-                <label for="username">Username</label>  
+                <label for="username">Username</label>
                 <input type="text" id="username" name="username" required placeholder="Enter your username">
             </div>
 
             <div class="input-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <div class="input-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject" required>
+                    <option value="">Select a subject</option>
+                    <option value="Math">Math</option>
+                    <option value="English">English</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                </select>
             </div>
 
             <div class="remember-group">
@@ -75,17 +123,8 @@
                 <button type="submit" id="loginButton">Login</button>
             </div>
         </form>
-
-        <!-- Example buttons to automatically submit answers -->
-        <div class="quiz-buttons">
-            <button onclick="sendAnswer('Q1', 'A')">Answer A</button>
-            <button onclick="sendAnswer('Q1', 'B')">Answer B</button>
-            <button onclick="sendAnswer('Q1', 'C')">Answer C</button>
-            <button onclick="sendAnswer('Q1', 'D')">Answer D</button>
-        </div>
     </div>
 </div>
 
-<script src="script.js"></script>
 </body>
 </html>
