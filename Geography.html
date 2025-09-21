@@ -13,7 +13,7 @@
         .no-bullets { list-style:none; padding:0; margin:20px 0; }
         .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
         .no-bullets li:hover { background-color:#555; }
-        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#007bff; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
         .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
         .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
         .reset-btn:hover { background-color:#e55347; }
@@ -71,7 +71,7 @@
             { quest: "4. Which city is the capital of Australia?", a: "Sydney", b: "Perth", c: "Canberra", correct: "c" },
             { quest: "5. What is the largest island in the Mediterranean Sea?", a: "Corsica", b: "Crete", c: "Sicily", correct: "c" },
             { quest: "6. Which river flows through the Grand Canyon?", a: "Colorado River", b: "Danube River", c: "Mekong River", correct: "a" },
-            { quest: "7. What is the smallest country in the world, both in terms of population and land area?", a: "South Africa", b: "Vatican City", c: "Japan", correct: "b" },
+            { quest: "7. What is the smallest country in the world?", a: "South Africa", b: "Vatican City", c: "Japan", correct: "b" },
             { quest: "8. Which mountain range runs along the border between France and Spain?", a: "Pyrenees", b: "Alps", c: "Andes", correct: "a" },
             { quest: "9. What is the largest city in Scandinavia?", a: "Stockholm", b: "Oslo", c: "Copenhagen", correct: "a" },
             { quest: "10. Which river is the longest in Asia?", a: "Nile River", b: "Amazon River", c: "Yangtze River", correct: "c" }
@@ -83,17 +83,26 @@
             document.getElementById("b").innerHTML = "B) " + questions[index].b;
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
             progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
-            backBtn.style.display = "inline-block"; // show back button only during questions
+            backBtn.style.display = "inline-block"; // show back button during questions
         }
 
         function chooseAnswer(answer) {
             userAnswers[index] = answer;
+            showFeedback(answer === questions[index].correct ? "Correct!" : "Wrong answer!");
             index++;
             if (index < questions.length) {
-                initQuest();
+                setTimeout(initQuest, 300); // short delay to show feedback
             } else {
-                endQuiz();
+                setTimeout(endQuiz, 300);
             }
+        }
+
+        function showFeedback(message) {
+            let feedback = document.createElement("div");
+            feedback.innerHTML = message;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 1000);
         }
 
         function endQuiz() {
@@ -134,4 +143,4 @@
     </script>
 </div>
 </body>
-</html>
+    </html>
