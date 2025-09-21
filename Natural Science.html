@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0">
+    <title>Natural Science Quiz</title>
+ <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .menu-container {
+            background-color: black;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: #dcdcdc;
+            margin-bottom: 20px;
+        }
+
+        .no-bullets {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .no-bullets li {
+            margin: 10px 0;
+            font-size: 1.2em;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .no-bullets li:hover {
+            background-color: #555555;
+        }
+        .feedback {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2d7b36;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            z-index: 100;
+        }
+
+        .progress {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color:  #e0e0e0;
+        }
+        nav ul {
+            list-style-type: none;
+            margin-top: 20px;
+        }
+
+        nav ul li {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        nav ul li a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(145deg, #56ccf2, #2f80ed);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            transform: scale(1.1);
+            background: linear-gradient(145deg, #2f80ed, #56ccf2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a:active {
+            transform: scale(1);
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #e55347;
+        }
+       </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <h1>Natural Science</h1>
+    <h3 id="question"></h3> 
+    <ul class="no-bullets">
+        <li id="a" onclick="myFunction('a')"></li>
+        <li id="b" onclick="myFunction('b')"></li>
+        <li id="c" onclick="myFunction('c')"></li>
+        <li id="d" onclick="myFunction('d')"></li>
+    </ul>
+    <div id="progress" class="progress"></div>
+    <button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
+
+        <script>
+            let index = 0;
+            let quest = document.getElementById("question");
+            
+            var questions = [
+                { quest: "1. What is the chemical symbol for water?", a: "H2O", b: "O2", c: "CO2", d: "H2", correct: "a" },
+                { quest: "2. Which planet is known as the Red Planet?", a: "Earth", b: "Mars", c: "Venus", d: "Jupiter", correct: "b" },
+                { quest: "3. What gas do plants absorb from the atmosphere?", a: "Oxygen", b: "Carbon Dioxide", c: "Nitrogen", d: "Hydrogen", correct: "b" },
+                { quest: "4. Which part of the plant conducts photosynthesis?", a: "Root", b: "Stem", c: "Leaf", d: "Flower", correct: "c" },
+                { quest: "5. What is the hardest natural substance on Earth?", a: "Gold", b: "Diamond", c: "Iron", d: "Quartz", correct: "b" },
+                { quest: "6. What is the boiling point of water at sea level?", a: "50°C", b: "75°C", c: "100°C", d: "150°C", correct: "c" },
+                { quest: "7. What type of animal is a dolphin?", a: "Fish", b: "Amphibian", c: "Reptile", d: "Mammal", correct: "d" },
+                { quest: "8. How many bones are in the human body?", a: "206", b: "205", c: "201", d: "210", correct: "a" },
+                { quest: "9. Which gas is most abundant in the Earth's atmosphere?", a: "Oxygen", b: "Hydrogen", c: "Carbon Dioxide", d: "Nitrogen", correct: "d" },
+                { quest: "10. What type of celestial body is the Sun?", a: "Planet", b: "Star", c: "Moon", d: "Asteroid", correct: "b" },
+                { quest: "11. Which organ in the human body is responsible for pumping blood?", a: "Brain", b: "Heart", c: "Liver", d: "Lungs", correct: "b" },
+                { quest: "12. Which layer of the Earth is the hottest?", a: "Crust", b: "Mantle", c: "Outer Core", d: "Inner Core", correct: "d" },
+                { quest: "13. What process do plants use to make food?", a: "Respiration", b: "Photosynthesis", c: "Transpiration", d: "Fermentation", correct: "b" },
+                { quest: "14. Which of the following is a renewable energy source?", a: "Coal", b: "Oil", c: "Wind", d: "Oxygen", correct: "c" },
+            ];
+
+                   initQuest();  
+        function initQuest() {
+            quest.innerHTML = questions[index].quest;
+            document.getElementById("a").innerHTML = "A) " + questions[index].a;
+            document.getElementById("b").innerHTML = "B) " + questions[index].b;
+            document.getElementById("c").innerHTML = "C) " + questions[index].c;
+            document.getElementById("d").innerHTML = "D) " + questions[index].d;
+            updateProgress();
+        }
+        function updateProgress() {
+            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+        }
+
+        function myFunction(answer) {
+            if (answer === questions[index].correct) {
+                showFeedback("Correct!");
+                index++;
+                if (index >= questions.length) {
+                    showFeedback("Congratulations! You've finished the quiz.");
+                    document.getElementById("reset").style.display = "block";
+                } else {
+                    initQuest();
+                }
+            } else {
+                showFeedback("Wrong answer. Try again!");
+            }
+        }
+        function showFeedback(message) {
+            let feedback = document.createElement("div");
+            feedback.innerHTML = message;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 2000);
+        }
+        function resetQuiz() {
+            index = 0;
+            document.getElementById("reset").style.display = "none";
+            initQuest();
+        }
+    </script>
+
+        <nav>
+            <ul>
+                <li><a href="Subjects.html">Back to Menu</a></li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Geography Quiz</title>
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .menu-container {
+            background-color: black;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: #dcdcdc;
+            margin-bottom: 20px;
+        }
+
+        .no-bullets {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .no-bullets li {
+            margin: 10px 0;
+            font-size: 1.2em;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .no-bullets li:hover {
+            background-color: #555555;
+        }
+        .feedback {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2d7b36;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            z-index: 100;
+        }
+
+        .progress {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #e0e0e0;
+        }
+        nav ul {
+            list-style-type: none;
+            margin-top: 20px;
+        }
+
+        nav ul li {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        nav ul li a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(145deg, #56ccf2, #2f80ed);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            transform: scale(1.1);
+            background: linear-gradient(145deg, #2f80ed, #56ccf2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a:active {
+            transform: scale(1);
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #e55347;
+        }
+       </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <h1>Geography</h1>
+    <h3 id="question"></h3> 
+    <ul class="no-bullets">
+        <li id="a" onclick="myFunction('a')"></li>
+        <li id="b" onclick="myFunction('b')"></li>
+        <li id="c" onclick="myFunction('c')"></li>
+    </ul>
+    <div id="progress" class="progress"></div>
+    <button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
+
+    <script>
+        let index = 0;
+        let score = 0;
+        let quest = document.getElementById("question");
+        let progress = document.getElementById("progress");
+        
+        var questions = [
+            {
+                quest: "1. What is the world's largest desert?",
+                a: "Sahara desert",
+                b: "Mojave desert",
+                c: "Gobi desert",
+                correct: "a"
+            },
+            {
+                quest: "2. Which river is the longest in South America?",
+                a: "Mississippi river",
+                b: "Nile river",
+                c: "Amazon river",
+                correct: "c"
+            },
+            {
+                quest: "3. What is the highest mountain peak in North America?",
+                a: "Mount McKinley",
+                b: "Mount Everest",
+                c: "Mount Olympus",
+                correct: "a"
+            },
+            {
+                quest: "4. Which city is the capital of Australia?",
+                a: "Sydney",
+                b: "Perth",
+                c: "Canberra",
+                correct: "c"
+            },
+            {
+                quest: "5. What is the largest island in the Mediterranean Sea?",
+                a: "Corsica",
+                b: "Crete",
+                c: "Sicily",
+                correct: "c"
+            },
+            {
+                quest: "6. Which river flows through the Grand Canyon?",
+                a: "Colorado River",
+                b: "Danube River",
+                c: "Mekong River",
+                correct: "a"
+            },
+            {
+                quest: "7. What is the smallest country in the world, both in terms of population and land area?",
+                a: "South Africa",
+                b: "Vatican City",
+                c: "Japan",
+                correct: "b"
+            },
+            {
+                quest: "8. Which mountain range runs along the border between France and Spain?",
+                a: "Pyrenees",
+                b: "Alps",
+                c: "Andes",
+                correct: "a"
+            },
+            {
+                quest: "9. What is the largest city in Scandinavia?",
+                a: "Stockholm",
+                b: "Japan",
+                c: "Tokyo",
+                correct: "a"
+            },
+            {
+                quest: "10. Which river is the longest in Asia?",
+                a: "Nile River",
+                b: "Amazon River",
+                c: "Yangtze River",
+                correct: "c"
+            }
+        ];
+
+               initQuest();  
+        function initQuest() {
+            quest.innerHTML = questions[index].quest;
+            document.getElementById("a").innerHTML = "A) " + questions[index].a;
+            document.getElementById("b").innerHTML = "B) " + questions[index].b;
+            document.getElementById("c").innerHTML = "C) " + questions[index].c;
+            updateProgress();
+        }
+        function updateProgress() {
+            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+        }
+
+        function myFunction(answer) {
+            if (answer === questions[index].correct) {
+                showFeedback("Correct!");
+                index++;
+                if (index >= questions.length) {
+                    showFeedback("Congratulations! You've finished the quiz.");
+                    document.getElementById("reset").style.display = "block";
+                } else {
+                    initQuest();
+                }
+            } else {
+                showFeedback("Wrong answer. Try again!");
+            }
+        }
+        function showFeedback(message) {
+            let feedback = document.createElement("div");
+            feedback.innerHTML = message;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 2000);
+        }
+        function resetQuiz() {
+            index = 0;
+            document.getElementById("reset").style.display = "none";
+            initQuest();
+        }
+    </script>
+
+    <nav>
+        <ul>
+            <li><a href="Subjects.html">Back</a></li>
+        </ul>
+
+     </nav>
+ </div>
+
+
+</body>
+</html>

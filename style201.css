@@ -1,0 +1,97 @@
+/* Reset some defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Center the login container */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo container (optional) */
+.logo {
+    width: 150px;        /* Set a width for the logo container */
+    height: 150px;       /* Set the same height as width to ensure it's square */
+    overflow: hidden;    /* Ensures the image is clipped to fit the circle */
+    border-radius: 50%;  /* This rounds the logo to create the circular shape */
+    margin: 0 auto;      /* Centers the logo on the page */
+}
+
+/* Logo image */
+#logo {
+    width: 100%;         /* Make the image fill the container's width */
+    height: 100%;        /* Make the image fill the container's height */
+    object-fit: cover;   /* Ensures the image covers the circular container */
+}
+
+/* Input field styling */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #888;
+}
+
+/* Remember me section */
+.remember-group {
+    margin-bottom: 20px;
+}
+
+.remember-group input {
+    margin-right: 10px;
+}
+
+/* Button styling */
+.button-group {
+    text-align: center;
+}
+
+#loginButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #1f80e0;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#loginButton:hover {
+    background-color: #176bb0;
+}
