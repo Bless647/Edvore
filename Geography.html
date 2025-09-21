@@ -15,8 +15,6 @@
         .no-bullets li:hover { background-color:#555; }
         .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
         .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-        .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-        .reset-btn:hover { background-color:#e55347; }
         .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
         .submit-btn:hover { background-color:#218838; }
         nav ul { list-style:none; padding:0; margin:0; }
@@ -35,7 +33,6 @@
         <li id="c" onclick="chooseAnswer('c')"></li>
     </ul>
     <div id="progress" class="progress"></div>
-    <button id="reset" class="reset-btn" onclick="resetQuiz()">Restart Quiz</button>
     <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
     <!-- Firebase SDK -->
@@ -84,31 +81,23 @@
         }
 
         function chooseAnswer(answer) {
+            showFeedback(answer === questions[index].correct ? "Correct!" : "Wrong answer!");
             userAnswers[index] = answer;
             index++;
-            if (index < questions.length) {
-                initQuest();
-            } else {
-                endQuiz();
-            }
+            setTimeout(() => {
+                if (index < questions.length) {
+                    initQuest();
+                } else {
+                    endQuiz();
+                }
+            }, 1000);
         }
 
         function endQuiz() {
             quest.innerHTML = "Quiz Completed!";
             answersList.style.display = "none";
             progress.style.display = "none";
-            document.getElementById("reset").style.display = "block";
             document.getElementById("submit").style.display = "inline-block";
-        }
-
-        function resetQuiz() {
-            index = 0;
-            userAnswers.length = 0;
-            answersList.style.display = "block";
-            progress.style.display = "block";
-            document.getElementById("reset").style.display = "none";
-            document.getElementById("submit").style.display = "none";
-            initQuest();
         }
 
         function submitQuiz() {
@@ -121,6 +110,14 @@
             }).catch((error) => {
                 alert("Error submitting quiz: " + error);
             });
+        }
+
+        function showFeedback(message) {
+            let feedback = document.createElement("div");
+            feedback.innerHTML = message;
+            feedback.classList.add("feedback");
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 1000);
         }
 
         window.onload = initQuest;
