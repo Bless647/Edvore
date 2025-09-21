@@ -5,22 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>History Quiz</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-.menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
-h1 { font-size:2.5em; color:#fff; }
-h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-.no-bullets { list-style:none; padding:0; margin:20px 0; }
-.no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
-.no-bullets li:hover { background-color:#555; }
-.feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
-.progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-nav ul { list-style:none; margin-top:20px; }
-nav ul li { margin-top:20px; text-align:center; }
-nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
-nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
-.submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1.2em; display:none; }
-.submit-btn:hover { background-color:#218838; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+    h1 { font-size:2.5em; color:#fff; }
+    h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+    .no-bullets { list-style:none; padding:0; margin:20px 0; }
+    .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
+    .no-bullets li:hover { background-color:#555; }
+    .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+    .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
+    .back-btn { margin-top:20px; padding:10px 20px; background-color:#6f42c1; color:white; border:none; border-radius:5px; cursor:pointer; display:inline-block; }
+    .back-btn:hover { background-color:#5a32a3; }
+    .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+    .submit-btn:hover { background-color:#218838; }
 </style>
 </head>
 <body>
@@ -31,110 +29,109 @@ nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f
     <li id="a" onclick="chooseAnswer('a')"></li>
     <li id="b" onclick="chooseAnswer('b')"></li>
     <li id="c" onclick="chooseAnswer('c')"></li>
+    <li id="d" onclick="chooseAnswer('d')"></li>
 </ul>
 <div id="progress" class="progress"></div>
-<nav>
-    <ul>
-        <li><a href="#" id="backBtn" onclick="goBack()" style="display:none;">Back</a></li>
-    </ul>
-</nav>
+<button id="back" class="back-btn" onclick="goBack()">Back</button>
 <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-  authDomain: "edvore-b11b7.firebaseapp.com",
-  databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-  projectId: "edvore-b11b7",
-  storageBucket: "edvore-b11b7.appspot.com",
-  messagingSenderId: "239809584061",
-  appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+    const firebaseConfig = {
+        apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+        authDomain: "edvore-b11b7.firebaseapp.com",
+        databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+        projectId: "edvore-b11b7",
+        storageBucket: "edvore-b11b7.appspot.com",
+        messagingSenderId: "239809584061",
+        appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+</script>
 
+<script>
 let index = 0;
 const quest = document.getElementById("question");
 const progress = document.getElementById("progress");
 const answersList = document.getElementById("answers-list");
+const backBtn = document.getElementById("back");
 const submitBtn = document.getElementById("submit");
-const backBtn = document.getElementById("backBtn");
 const userAnswers = [];
+const username = localStorage.getItem("username") || "Unknown User";
 
 const questions = [
-  { quest:"1. Who was the first President of the United States?", a:"Abraham Lincoln", b:"George Washington", c:"Thomas Jefferson", correct:"b" },
-  { quest:"2. In which year did World War II end?", a:"1945", b:"1939", c:"1918", correct:"a" },
-  { quest:"3. Who discovered America in 1492?", a:"Christopher Columbus", b:"Vasco da Gama", c:"Ferdinand Magellan", correct:"a" },
-  { quest:"4. The Great Fire of London occurred in which year?", a:"1666", b:"1600", c:"1707", correct:"a" },
-  { quest:"5. Who was known as the Maid of Orleans?", a:"Joan of Arc", b:"Marie Curie", c:"Queen Elizabeth", correct:"a" },
-  { quest:"6. The Berlin Wall fell in which year?", a:"1989", b:"1991", c:"1975", correct:"a" },
-  { quest:"7. Who wrote the Declaration of Independence?", a:"Benjamin Franklin", b:"John Adams", c:"Thomas Jefferson", correct:"c" },
-  { quest:"8. Who was the first man to step on the moon?", a:"Neil Armstrong", b:"Buzz Aldrin", c:"Yuri Gagarin", correct:"a" },
-  { quest:"9. The Renaissance began in which country?", a:"Italy", b:"France", c:"Germany", correct:"a" },
-  { quest:"10. Who was the British Prime Minister during World War II?", a:"Winston Churchill", b:"Neville Chamberlain", c:"Clement Attlee", correct:"a" }
+    { quest: "1. Who was the first president of the United States?", a: "George Washington", b: "Abraham Lincoln", c: "Thomas Jefferson", d: "John Adams", correct: "a" },
+    { quest: "2. In which year did World War II end?", a: "1944", b: "1945", c: "1946", d: "1943", correct: "b" },
+    { quest: "3. Which ancient civilization built the pyramids?", a: "Romans", b: "Greeks", c: "Egyptians", d: "Mayans", correct: "c" },
+    { quest: "4. Who wrote the Declaration of Independence?", a: "Benjamin Franklin", b: "Thomas Jefferson", c: "George Washington", d: "John Adams", correct: "b" },
+    { quest: "5. The Cold War was primarily between which two countries?", a: "USA & USSR", b: "USA & China", c: "USA & Germany", d: "USA & UK", correct: "a" },
+    { quest: "6. Who was known as the Maid of Orléans?", a: "Joan of Arc", b: "Marie Curie", c: "Cleopatra", d: "Catherine the Great", correct: "a" },
+    { quest: "7. The fall of the Berlin Wall occurred in which year?", a: "1987", b: "1989", c: "1991", d: "1990", correct: "b" },
+    { quest: "8. Who was the first man to walk on the Moon?", a: "Neil Armstrong", b: "Buzz Aldrin", c: "Yuri Gagarin", d: "Michael Collins", correct: "a" },
+    { quest: "9. Which empire was ruled by Genghis Khan?", a: "Mongol Empire", b: "Ottoman Empire", c: "Roman Empire", d: "Persian Empire", correct: "a" },
+    { quest: "10. What year did the French Revolution begin?", a: "1789", b: "1776", c: "1804", d: "1799", correct: "a" }
 ];
 
 function initQuest() {
-  quest.innerHTML = questions[index].quest;
-  document.getElementById("a").innerHTML = "A) "+questions[index].a;
-  document.getElementById("b").innerHTML = "B) "+questions[index].b;
-  document.getElementById("c").innerHTML = "C) "+questions[index].c;
-  progress.innerHTML = `Question ${index+1} of ${questions.length}`;
-  backBtn.style.display = index>0?"inline-block":"none";
-  submitBtn.style.display = "none";
-  answersList.style.display = "block";
+    quest.innerHTML = questions[index].quest;
+    document.getElementById("a").innerHTML = "A) " + questions[index].a;
+    document.getElementById("b").innerHTML = "B) " + questions[index].b;
+    document.getElementById("c").innerHTML = "C) " + questions[index].c;
+    document.getElementById("d").innerHTML = "D) " + questions[index].d;
+    progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+
+    backBtn.style.display = (index < questions.length) ? "inline-block" : "none";
 }
 
-function chooseAnswer(answer){
-  userAnswers[index] = answer;
-  showFeedback(answer===questions[index].correct?"Correct!":"Wrong answer!");
-  index++;
-  if(index<questions.length){
-    initQuest();
-  } else {
+function chooseAnswer(answer) {
+    userAnswers[index] = { question: questions[index].quest, selected: answer, correct: questions[index].correct };
+    showFeedback(answer === questions[index].correct ? "Correct!" : "Wrong!");
+    index++;
+    if (index < questions.length) {
+        initQuest();
+    } else {
+        endQuiz();
+    }
+}
+
+function goBack() {
+    window.location.href = "Subjects.html";
+}
+
+function showFeedback(message) {
+    let feedback = document.createElement("div");
+    feedback.innerHTML = message;
+    feedback.classList.add("feedback");
+    document.body.appendChild(feedback);
+    setTimeout(() => feedback.remove(), 800);
+}
+
+function endQuiz() {
     quest.innerHTML = "History Quiz Completed!";
-    answersList.style.display="none";
-    progress.style.display="none";
-    backBtn.style.display="none";
-    submitBtn.style.display="inline-block";
-  }
+    answersList.style.display = "none";
+    progress.style.display = "none";
+    backBtn.style.display = "none";
+    submitBtn.style.display = "inline-block";
 }
 
-function goBack(){
-  if(index>0){
-    index--;
-    initQuest();
-  }
+function submitQuiz() {
+    const submissionRef = database.ref('History Submissions/' + Date.now());
+    submissionRef.set({
+        username: username,
+        answers: userAnswers
+    }).then(() => {
+        alert("Quiz submitted successfully!");
+        window.location.href = "Subjects.html";
+    }).catch((error) => {
+        alert("Error submitting quiz: " + error);
+    });
 }
 
-function showFeedback(msg){
-  let feedback=document.createElement("div");
-  feedback.innerHTML=msg;
-  feedback.classList.add("feedback");
-  document.body.appendChild(feedback);
-  setTimeout(()=>feedback.remove(),2000);
-}
-
-function submitQuiz(){
-  const username=localStorage.getItem("username");
-  if(!username){
-    alert("You must be logged in to submit!");
-    window.location.href="index.html";
-    return;
-  }
-  const refDB=database.ref('History_Submission/'+Date.now());
-  refDB.set({username:username,answers:userAnswers})
-  .then(()=>{
-    alert("Your answers were sent to Firebase successfully!");
-    window.location.href="Subjects.html";
-  })
-  .catch(err=>{alert("Error submitting quiz: "+err);});
-}
-
-window.onload=initQuest;
+window.onload = initQuest;
 </script>
 </div>
 </body>
-</html>
+    </html>
