@@ -11,7 +11,7 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
         { username: "Lala",password: "Latasha",  page: "Lala.html" },
         { username: "Joy",password: "12tek778",   page: "Joy.html" },
         { username: "Langu",password: "Mabaso",    page: "Langu.html" },
-        { username: "Nhluvuko",password: "LUNAR",    page: "Nhluvuko.html" },
+        { username: "Kea",password: "Nhluvuko",    page: "Nhluvuko.html" },
         { username: "Khanyisile",password: "032327",    page: "Ntsongo.html" },
         { username: "Risuna",password: "246810",    page: "Risuna.html" },
         { username: "Mbuso",password: "Mbuso",    page: "Mbuso.html" },
