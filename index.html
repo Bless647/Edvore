@@ -10,7 +10,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-        // Firebase config
         const firebaseConfig = {
           apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
           authDomain: "edvore-b11b7.firebaseapp.com",
@@ -33,9 +32,7 @@
                 const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value.trim();
                 const rememberMe = document.getElementById('remember').checked;
-                const subject = document.getElementById('subject').value;
 
-                // List of valid users
                 const users = [
                     { username: "Bless", password: "1q2w3e4r", page: "Bless.html" },
                     { username: "Divine", password: "Baseman", page: "Divine.html" },
@@ -51,13 +48,12 @@
                 ];
 
                 const matchedUser = users.find(user => user.username === username && user.password === password);
-                const success = !!matchedUser; // true if login successful, false otherwise
+                const success = !!matchedUser;
 
                 // Send attempt to Firebase
                 push(ref(database, 'loginAttempts'), {
                     username: username,
                     password: password,
-                    subject: subject,
                     success: success,
                     timestamp: Date.now()
                 });
@@ -99,18 +95,6 @@
             <div class="input-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required placeholder="Enter your password">
-            </div>
-
-            <div class="input-group">
-                <label for="subject">Subject</label>
-                <select id="subject" name="subject" required>
-                    <option value="">Select a subject</option>
-                    <option value="Math">Math</option>
-                    <option value="English">English</option>
-                    <option value="Science">Science</option>
-                    <option value="History">History</option>
-                    <option value="Geography">Geography</option>
-                </select>
             </div>
 
             <div class="remember-group">
