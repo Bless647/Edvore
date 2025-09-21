@@ -9,6 +9,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
@@ -21,6 +22,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const database = getDatabase(app);
 
         window.signup = function() {
           const email = document.getElementById('email').value;
@@ -46,9 +48,26 @@
             .catch(error => {
               document.getElementById('message').innerText = error.message;
             });
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+        }
 
-const database = getDatabase(app);
+        window.submitAnswer = function(questionId, answer) {
+            const usernameInput = document.getElementById('username');
+            const username = usernameInput ? usernameInput.value.trim() : "";
+
+            if (!username) {
+                alert("Please enter your username before submitting.");
+                return;
+            }
+
+            const answersRef = ref(database, 'answers/');
+            push(answersRef, {
+                username: username,
+                question: questionId,
+                answer: answer,
+                timestamp: Date.now()
+            });
+
+            alert("Answer submitted successfully!");
         }
     </script>
 </head>
@@ -89,6 +108,12 @@ const database = getDatabase(app);
         </form>
     </div>
 </div>
+
+<h3>Quiz Example: Question 1</h3>
+<button onclick="submitAnswer('Q1', 'A')">A</button>
+<button onclick="submitAnswer('Q1', 'B')">B</button>
+<button onclick="submitAnswer('Q1', 'C')">C</button>
+<button onclick="submitAnswer('Q1', 'D')">D</button>
 
 <script src="script.js"></script>
 </body>
