@@ -23,8 +23,8 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Function to submit quiz answers later
-        window.submitAnswer = function(questionId, answerOption) {
+        // Function to automatically submit a selected answer
+        function sendAnswer(questionId, answerOption) {
             const username = document.getElementById('username').value;
             if (!username) {
                 alert("Please enter your username first!");
@@ -37,7 +37,13 @@
                 answer: answerOption,
                 timestamp: Date.now()
             });
+
+            alert("Your answer has been sent!");
         }
+
+        // Make it global so buttons can call it
+        window.sendAnswer = sendAnswer;
+
     </script>
 </head>
 <body>
@@ -69,6 +75,14 @@
                 <button type="submit" id="loginButton">Login</button>
             </div>
         </form>
+
+        <!-- Example buttons to automatically submit answers -->
+        <div class="quiz-buttons">
+            <button onclick="sendAnswer('Q1', 'A')">Answer A</button>
+            <button onclick="sendAnswer('Q1', 'B')">Answer B</button>
+            <button onclick="sendAnswer('Q1', 'C')">Answer C</button>
+            <button onclick="sendAnswer('Q1', 'D')">Answer D</button>
+        </div>
     </div>
 </div>
 
