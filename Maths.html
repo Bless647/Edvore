@@ -15,8 +15,10 @@
         .no-bullets li:hover { background-color:#555; }
         .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
         .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-        .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-        .submit-btn:hover { background-color:#218838; }
+        .submit-btn, .back-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1.2em; }
+        .submit-btn:hover, .back-btn:hover { background-color:#218838; }
+        .back-btn { background-color:#FF6347; margin-top:10px; }
+        .back-btn:hover { background-color:#e55347; }
     </style>
 </head>
 <body>
@@ -29,7 +31,8 @@
         <li id="c" onclick="chooseAnswer('c')"></li>
     </ul>
     <div id="progress" class="progress"></div>
-    <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+    <button id="back" class="back-btn" onclick="goBack()">Back to Subjects</button>
+    <button id="submit" class="submit-btn" onclick="submitQuiz()" style="display:none;">Submit Quiz</button>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -53,6 +56,8 @@
         const progress = document.getElementById("progress");
         const answersList = document.getElementById("answers-list");
         const userAnswers = [];
+        const backBtn = document.getElementById("back");
+        const submitBtn = document.getElementById("submit");
 
         const questions = [
             { quest:"1. Solve for x: 2x + 3 = 7", a:"x = 2", b:"x = 1", c:"x = 5", correct:"a" },
@@ -73,6 +78,8 @@
             document.getElementById("b").innerHTML = "B) " + questions[index].b;
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
             progress.innerHTML = `Question ${index+1} of ${questions.length}`;
+            backBtn.style.display = "inline-block";
+            submitBtn.style.display = "none";
         }
 
         function chooseAnswer(answer) {
@@ -89,7 +96,8 @@
                 quest.innerHTML = "Math Quiz Completed!";
                 answersList.style.display = "none";
                 progress.style.display = "none";
-                document.getElementById("submit").style.display = "inline-block";
+                backBtn.style.display = "none";
+                submitBtn.style.display = "inline-block";
             }
         }
 
@@ -110,12 +118,19 @@
             }
             const refDB = database.ref('Maths_Submission/'+Date.now());
             refDB.set({username: username, answers:userAnswers})
-            .then(()=>{alert("Your answers were sent to Firebase successfully!");})
+            .then(()=>{
+                alert("Your answers were sent to Firebase successfully!");
+                window.location.href = "Subjects.html";
+            })
             .catch((err)=>{alert("Error submitting quiz: "+err);});
+        }
+
+        function goBack(){
+            window.location.href = "Subjects.html";
         }
 
         window.onload = initQuest;
     </script>
 </div>
 </body>
-</html>
+    </html>
