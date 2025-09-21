@@ -125,7 +125,7 @@
         .reset-btn:hover {
             background-color: #e55347;
         }
-       </style>
+    </style>
 </head>
 <body>
 
@@ -133,33 +133,18 @@
     <h1>Maths</h1>
     <h3 id="question"></h3> 
     <ul class="no-bullets">
-        <li id="a" onclick="submitAnswer('a')"></li>
-        <li id="b" onclick="submitAnswer('b')"></li>
-        <li id="c" onclick="submitAnswer('c')"></li>
+        <li id="a" onclick="chooseAnswer('a')"></li>
+        <li id="b" onclick="chooseAnswer('b')"></li>
+        <li id="c" onclick="chooseAnswer('c')"></li>
     </ul>
     <div id="progress" class="progress"></div>
     <button id="reset" class="reset-btn" style="display: none;" onclick="resetQuiz()">Restart Quiz</button>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-          authDomain: "edvore-b11b7.firebaseapp.com",
-          databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
-          projectId: "edvore-b11b7",
-          storageBucket: "edvore-b11b7.appspot.com",
-          messagingSenderId: "239809584061",
-          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
+    <script>
         let index = 0;
-        let quest = document.getElementById("question");
-        
+        const quest = document.getElementById("question");
+        const progress = document.getElementById("progress");
+
         const questions = [
             { quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
             { quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
@@ -169,37 +154,20 @@
             { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
             { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
             { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
-            { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "111", correct: "b" },
+            { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
             { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
         ];
-
-        initQuest();
 
         function initQuest() {
             quest.innerHTML = questions[index].quest;
             document.getElementById("a").innerHTML = "A) " + questions[index].a;
             document.getElementById("b").innerHTML = "B) " + questions[index].b;
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
-            updateProgress();
+            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
         }
 
-        function updateProgress() {
-            document.getElementById("progress").innerHTML = `Question ${index + 1} of ${questions.length}`;
-        }
-
-        function submitAnswer(answer) {
-            const selected = questions[index][answer];
-            const correctAnswer = questions[index].correct;
-            
-            // Save answer to Firebase
-            push(ref(database, 'quizAnswers'), {
-                question: questions[index].quest,
-                selectedAnswer: answer,
-                isCorrect: answer === correctAnswer,
-                timestamp: new Date().toISOString()
-            });
-
-            if (answer === correctAnswer) {
+        function chooseAnswer(answer) {
+            if (answer === questions[index].correct) {
                 showFeedback("Correct!");
                 index++;
                 if (index >= questions.length) {
@@ -226,10 +194,16 @@
             document.getElementById("reset").style.display = "none";
             initQuest();
         }
+
+        initQuest();
     </script>
 
     <nav>
         <ul>
             <li><a href="Subjects.html">Back</a></li>
         </ul>
-    </
+    </nav>
+</div>
+
+</body>
+</html>
