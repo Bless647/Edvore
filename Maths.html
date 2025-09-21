@@ -1,139 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maths Quiz</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-.menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
-h1 { font-size:2.5em; color:#fff; }
-h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-.no-bullets { list-style:none; padding:0; margin:20px 0; }
-.no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
-.no-bullets li:hover { background-color:#555; }
-.feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
-.progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-nav ul { list-style:none; margin-top:20px; }
-nav ul li { margin-top:20px; text-align:center; }
-nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
-nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
-.reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; }
-.reset-btn:hover { background-color:#e55347; }
-.submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-.submit-btn:hover { background-color:#218838; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Maths Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f4f4; padding:20px; }
+    .quiz-container { max-width:680px; margin:30px auto; background:#fff; padding:18px; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.08); }
+    h2 { margin:0 0 14px 0; font-size:20px; }
+    .options button { display:block; width:100%; margin:8px 0; padding:10px; border:none; border-radius:6px; cursor:pointer; background:#007BFF; color:#fff; font-size:15px; text-align:left; }
+    .options button:hover { background:#0062cc; }
+    #result { margin-top:14px; font-weight:bold; min-height:1.2em; }
+    #submitBtn { margin-top:14px; padding:10px 14px; background:#28a745; color:#fff; border:none; border-radius:6px; cursor:pointer; display:none; }
+    #submitBtn:hover { background:#218838; }
+    .meta { color:#666; font-size:13px; margin-bottom:8px; }
+  </style>
 </head>
 <body>
-<div class="menu-container">
-<h1>Maths</h1>
-<h3 id="question"></h3>
-<ul class="no-bullets" id="answers-list">
-<li id="a" onclick="chooseAnswer('a')"></li>
-<li id="b" onclick="chooseAnswer('b')"></li>
-<li id="c" onclick="chooseAnswer('c')"></li>
-</ul>
-<div id="progress" class="progress"></div>
-<button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
-<button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+  <div class="quiz-container">
+    <div class="meta" id="userMeta">Logged in as: (not detected)</div>
+    <h2 id="question">Question will appear here</h2>
+    <div class="options">
+      <button id="btnA" onclick="checkAnswer('a')">A) Option A</button>
+      <button id="btnB" onclick="checkAnswer('b')">B) Option B</button>
+      <button id="btnC" onclick="checkAnswer('c')">C) Option C</button>
+    </div>
+    <p id="result"></p>
+    <button id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
+  </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<script>
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-  authDomain: "edvore-b11b7.firebaseapp.com",
-  databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-  projectId: "edvore-b11b7",
-  storageBucket: "edvore-b11b7.appspot.com",
-  messagingSenderId: "239809584061",
-  appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-</script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+      authDomain: "edvore-b11b7.firebaseapp.com",
+      databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+      projectId: "edvore-b11b7",
+      storageBucket: "edvore-b11b7.appspot.com",
+      messagingSenderId: "239809584061",
+      appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+  </script>
 
-<script>
-let index = 0;
-const quest = document.getElementById("question");
-const progress = document.getElementById("progress");
-const userAnswers = [];
-const answersList = document.getElementById("answers-list");
+  <script>
+    const quiz = [
+      { question: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
+      { question: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
+      { question: "3. What is the formula for the area of a circle?", a: "A = πr²", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
+      { question: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
+      { question: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
+      { question: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
+      { question: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
+      { question: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
+      { question: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
+      { question: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
+    ];
 
-const questions = [
-{ quest: "1. What is 2 + 2?", a:"2", b:"4", c:"6", correct:"b" },
-{ quest: "2. What is 5 * 3?", a:"15", b:"53", c:"8", correct:"a" },
-{ quest: "3. What is 10 - 6?", a:"4", b:"6", c:"8", correct:"a" },
-{ quest: "4. What is 9 / 3?", a:"3", b:"6", c:"1", correct:"a" },
-{ quest: "5. What is the square of 4?", a:"8", b:"16", c:"12", correct:"b" },
-{ quest: "6. What is 7 + 6?", a:"13", b:"14", c:"17", correct:"a" },
-{ quest: "7. What is 12 - 5?", a:"7", b:"5", c:"6", correct:"a" },
-{ quest: "8. What is 3 * 3?", a:"6", b:"9", c:"12", correct:"b" },
-{ quest: "9. What is 8 / 2?", a:"2", b:"4", c:"6", correct:"b" },
-{ quest: "10. What is 6 * 6?", a:"36", b:"42", c:"30", correct:"a" }
-];
+    let current = 0;
+    const userAnswers = new Array(quiz.length).fill(null);
+    const questionEl = document.getElementById('question');
+    const resultEl = document.getElementById('result');
+    const userMeta = document.getElementById('userMeta');
+    const submitBtn = document.getElementById('submitBtn');
 
-function initQuest() {
-quest.innerHTML = questions[index].quest;
-document.getElementById("a").innerHTML = "A) " + questions[index].a;
-document.getElementById("b").innerHTML = "B) " + questions[index].b;
-document.getElementById("c").innerHTML = "C) " + questions[index].c;
-progress.innerHTML = `Question ${index+1} of ${questions.length}`;
-}
+    function loadQuestion() {
+      const q = quiz[current];
+      questionEl.textContent = q.question;
+      document.getElementById('btnA').textContent = 'A) ' + q.a;
+      document.getElementById('btnB').textContent = 'B) ' + q.b;
+      document.getElementById('btnC').textContent = 'C) ' + q.c;
+      resultEl.textContent = '';
+      updateUserMeta();
+    }
 
-function chooseAnswer(answer) {
-userAnswers[index] = answer;
-index++;
-if(index < questions.length) initQuest();
-else endQuiz();
-}
+    function checkAnswer(choice) {
+      userAnswers[current] = choice;
+      const correct = quiz[current].correct;
+      if (choice === correct) {
+        resultEl.textContent = 'Correct!';
+        resultEl.style.color = 'green';
+      } else {
+        resultEl.textContent = 'Wrong!';
+        resultEl.style.color = 'red';
+      }
+      current++;
+      if (current < quiz.length) {
+        setTimeout(loadQuestion, 700);
+      } else {
+        setTimeout(finishQuiz, 700);
+      }
+    }
 
-function endQuiz() {
-quest.innerHTML = "Quiz Completed!";
-answersList.style.display = "none";
-progress.style.display = "none";
-document.getElementById("reset").style.display = "block";
-document.getElementById("submit").style.display = "inline-block";
-}
+    function finishQuiz() {
+      questionEl.textContent = 'Quiz Finished';
+      resultEl.textContent = 'Press Submit to send your answers.';
+      submitBtn.style.display = 'inline-block';
+      document.querySelector('.options').style.pointerEvents = 'none';
+    }
 
-function resetQuiz() {
-index = 0;
-userAnswers.length = 0;
-answersList.style.display = "block";
-progress.style.display = "block";
-document.getElementById("reset").style.display = "none";
-document.getElementById("submit").style.display = "none";
-initQuest();
-}
+    function updateUserMeta() {
+      const uname = localStorage.getItem('username');
+      if (uname) userMeta.textContent = 'Logged in as: ' + uname;
+      else userMeta.textContent = 'Logged in as: (not detected)';
+    }
 
-function submitQuiz() {
-const username = localStorage.getItem("username");
-if(!username) {
-alert("Error: username not found. Make sure you are logged in.");
-return;
-}
-const submissionRef = database.ref('Maths_Submission/' + Date.now());
-submissionRef.set({ user: username, answers: userAnswers })
-.then(() => {
-alert("Quiz submitted successfully!");
-window.location.href = "Subjects.html";
-}).catch((error) => {
-alert("Error submitting quiz: " + error);
-});
-}
+    function submitQuiz() {
+      const username = localStorage.getItem('username');
+      if (!username) {
+        alert('You must be logged in to submit. Redirecting to login page.');
+        window.location.href = 'login.html';
+        return;
+      }
+      let score = 0;
+      for (let i = 0; i < quiz.length; i++) {
+        if (userAnswers[i] === quiz[i].correct) score++;
+      }
+      const payload = {
+        username: username,
+        subject: 'Maths',
+        answers: userAnswers,
+        score: score,
+        timestamp: Date.now()
+      };
+      const key = 'Maths_Submission/' + Date.now();
+      firebase.database().ref(key).set(payload)
+        .then(() => {
+          alert('Quiz submitted. Thanks, ' + username + '! Score: ' + score + '/' + quiz.length);
+          window.location.href = 'Subjects.html';
+        })
+        .catch(err => {
+          alert('Error submitting quiz: ' + err);
+        });
+    }
 
-window.onload = initQuest;
-</script>
-
-<nav>
-<ul>
-<li><a href="Subjects.html">Back</a></li>
-</ul>
-</nav>
-</div>
+    window.onload = function() {
+      updateUserMeta();
+      loadQuestion();
+    };
+  </script>
 </body>
-</html>
+  </html>
