@@ -50,30 +50,38 @@
                 const matchedUser = users.find(user => user.username === username && user.password === password);  
                 const success = !!matchedUser;  
 
-                // Send attempt to Firebase and wait before redirecting
-                push(ref(database, 'loginAttempts'), {
-                    username: username,
-                    password: password,
-                    success: success,
-                    timestamp: Date.now()
-                }).then(() => {
-                    if (success) {
-                        alert("Login successful!");
-                        if (rememberMe) {
-                            localStorage.setItem("username", username);
-                        }
-                        window.location.href = matchedUser.page;
-                    } else {
-                        alert("Invalid username or password");
-                    }
-                }).catch(err => {
-                    alert("Error sending login info to Firebase: " + err);
-                });
+                push(ref(database, 'loginAttempts'), {  
+                    username: username,  
+                    password: password,  
+                    success: success,  
+                    timestamp: Date.now()  
+                }).then(() => {  
+                    if (success) {  
+                        alert("Login successful!");  
+
+                        // ✅ FIX: Always save username for quizzes  
+                        localStorage.setItem("username", username);  
+
+                        // ✅ Keep Remember Me working separately  
+                        if (rememberMe) {  
+                            localStorage.setItem("rememberMe", "true");  
+                        } else {  
+                            localStorage.removeItem("rememberMe");  
+                        }  
+
+                        window.location.href = matchedUser.page;  
+                    } else {  
+                        alert("Invalid username or password");  
+                    }  
+                }).catch(err => {  
+                    alert("Error sending login info to Firebase: " + err);  
+                });  
             });  
 
             // Auto-fill username if remembered  
             const savedUsername = localStorage.getItem("username");  
-            if (savedUsername) {  
+            const rememberStatus = localStorage.getItem("rememberMe");  
+            if (savedUsername && rememberStatus) {  
                 document.getElementById("username").value = savedUsername;  
                 document.getElementById("remember").checked = true;  
             }  
@@ -113,4 +121,4 @@
 </div>  
 
 </body>  
-                    </html>
+    </html>
