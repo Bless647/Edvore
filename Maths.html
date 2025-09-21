@@ -44,90 +44,76 @@ nav ul li a:active { transform: scale(1); }
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
 
-<script>
-// Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+ <script>
+    let index = 0;
+    const quest = document.getElementById("question");
+    const progress = document.getElementById("progress");
+    const answers = { a: null, b: null, c: null }; // For storing user's selections if needed
 
-let index = 0;
-let answers = {};
-const quest = document.getElementById("question");
-const progress = document.getElementById("progress");
+    const questions = [
+        { quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
+        { quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
+        { quest: "3. What is the formula for the area of a circle?", a: "A = πr^2", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
+        { quest: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
+        { quest: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
+        { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
+        { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
+        { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
+        { quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
+        { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
+    ];
 
-const questions = [
-{ quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
-{ quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
-{ quest: "3. What is the formula for the area of a circle?", a: "A = πr^2", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
-{ quest: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
-{ quest: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
-{ quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
-{ quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
-{ quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
-{ quest: "9. What is the value of 11² (11 squared)?", a: "66", b: "121", c: "42", correct: "b" },
-{ quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
-];
+    function initQuest() {
+        quest.innerHTML = questions[index].quest;
+        document.getElementById("a").innerHTML = "A) " + questions[index].a;
+        document.getElementById("b").innerHTML = "B) " + questions[index].b;
+        document.getElementById("c").innerHTML = "C) " + questions[index].c;
+        progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+    }
 
-function initQuest() {
-    quest.innerHTML = questions[index].quest;
-    document.getElementById("a").innerHTML = "A) " + questions[index].a;
-    document.getElementById("b").innerHTML = "B) " + questions[index].b;
-    document.getElementById("c").innerHTML = "C) " + questions[index].c;
-    progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
-}
+    function chooseAnswer(answer) {
+        answers[index] = answer; // Store the user's answer
+        if (answer === questions[index].correct) {
+            showFeedback("Correct!");
+        } else {
+            showFeedback("Wrong answer. Try again!");
+        }
 
-function chooseAnswer(answer) {
-    answers[index + 1] = answer;
-    if(answer === questions[index].correct) showFeedback("Correct!"); else showFeedback("Wrong answer!");
-    index++;
-    if(index >= questions.length){
-        document.getElementById("reset").style.display = "block";
-        document.getElementById("submit").style.display = "inline-block";
-        quest.innerHTML = "Quiz completed! Click Submit to send your answers.";
-        document.getElementById("a").style.display = "none";
-        document.getElementById("b").style.display = "none";
-        document.getElementById("c").style.display = "none";
-        progress.style.display = "none";
-    } else initQuest();
-}
+        // Move to next question
+        index++;
+        if (index < questions.length) {
+            initQuest();
+        } else {
+            document.getElementById("reset").style.display = "block";
+            document.getElementById("submit").style.display = "block";
+            quest.innerHTML = "Quiz Completed!";
+            document.getElementById("a").innerHTML = "";
+            document.getElementById("b").innerHTML = "";
+            document.getElementById("c").innerHTML = "";
+            progress.innerHTML = "";
+        }
+    }
 
-function showFeedback(message){
-    const feedback = document.createElement("div");
-    feedback.innerHTML = message;
-    feedback.classList.add("feedback");
-    document.body.appendChild(feedback);
-    setTimeout(()=>feedback.remove(), 2000);
-}
+    function showFeedback(message) {
+        const feedback = document.createElement("div");
+        feedback.innerHTML = message;
+        feedback.classList.add("feedback");
+        document.body.appendChild(feedback);
+        setTimeout(() => feedback.remove(), 2000);
+    }
 
-function resetQuiz(){
-    index=0;
-    answers={};
-    document.getElementById("reset").style.display="none";
-    document.getElementById("submit").style.display="none";
-    document.getElementById("a").style.display="block";
-    document.getElementById("b").style.display="block";
-    document.getElementById("c").style.display="block";
-    progress.style.display="block";
-    initQuest();
-}
+    function resetQuiz() {
+        index = 0;
+        document.getElementById("reset").style.display = "none";
+        document.getElementById("submit").style.display = "none";
+        initQuest();
+    }
 
-function submitAnswers(){
-    const timestamp = Date.now();
-    database.ref('quiz_results/' + timestamp).set(answers)
-    .then(()=>{ showFeedback("Answers submitted successfully!"); })
-    .catch(err=>{ showFeedback("Error: "+err); });
-}
-
-initQuest();
-</script>
+    // Make sure initQuest runs after the page fully loads
+    window.onload = function() {
+        initQuest();
+    }
+ </script>
 
 <nav>
 <ul>
