@@ -1,134 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta charset="UTF-8">
-    <title>Maths Quiz</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-        .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
-        h1 { font-size:2.5em; color:#fff; }
-        h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-        .no-bullets { list-style:none; padding:0; margin:20px 0; }
-        .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
-        .no-bullets li:hover { background-color:#555; }
-        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
-        .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-        nav ul { list-style:none; margin-top:20px; }
-        nav ul li { margin-top:20px; text-align:center; }
-        nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
-        nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
-        .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; }
-        .reset-btn:hover { background-color:#e55347; }
-        .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-        .submit-btn:hover { background-color:#218838; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Maths Quiz</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+.menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+h1 { font-size:2.5em; color:#fff; }
+h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+.no-bullets { list-style:none; padding:0; margin:20px 0; }
+.no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
+.no-bullets li:hover { background-color:#555; }
+.feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+.progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
+nav ul { list-style:none; margin-top:20px; }
+nav ul li { margin-top:20px; text-align:center; }
+nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
+nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
+.reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; }
+.reset-btn:hover { background-color:#e55347; }
+.submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+.submit-btn:hover { background-color:#218838; }
+</style>
 </head>
 <body>
 <div class="menu-container">
-    <h1>Maths</h1>
-    <h3 id="question"></h3> 
-    <ul class="no-bullets" id="answers-list">
-        <li id="a" onclick="chooseAnswer('a')"></li>
-        <li id="b" onclick="chooseAnswer('b')"></li>
-        <li id="c" onclick="chooseAnswer('c')"></li>
+<h1>Maths</h1>
+<h3 id="question"></h3> 
+<ul class="no-bullets" id="answers-list">
+    <li id="a" onclick="chooseAnswer('a')"></li>
+    <li id="b" onclick="chooseAnswer('b')"></li>
+    <li id="c" onclick="chooseAnswer('c')"></li>
+</ul>
+<div id="progress" class="progress"></div>
+<button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
+<button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+    authDomain: "edvore-b11b7.firebaseapp.com",
+    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+    projectId: "edvore-b11b7",
+    storageBucket: "edvore-b11b7.appspot.com",
+    messagingSenderId: "239809584061",
+    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+</script>
+
+<script>
+let index = 0;
+const quest = document.getElementById("question");
+const progress = document.getElementById("progress");
+const userAnswers = [];
+const answersList = document.getElementById("answers-list");
+const submitBtn = document.getElementById("submit");
+
+const questions = [
+    { quest: "1. What is the value of x in 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
+    { quest: "2. Sum of interior angles of a triangle?", a: "360°", b: "90°", c: "180°", correct: "c" },
+    { quest: "3. Formula for the area of a circle?", a: "A = πr²", b: "A = s²", c: "A = (b*h)/2", correct: "a" },
+    { quest: "4. Value of 7²?", a: "49", b: "21", c: "42", correct: "a" },
+    { quest: "5. Sum of numbers 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
+    { quest: "6. Volume of rectangular prism formula?", a: "V=L²H", b: "V=lwh", c: "A=πr²", correct: "b" },
+    { quest: "7. Value of x in x/4=9?", a: "x=12", b: "x=21", c: "x=36", correct: "c" },
+    { quest: "8. Perimeter of square side 5cm?", a: "20cm", b: "21cm", c: "42cm", correct: "a" },
+    { quest: "9. What is 10 + 15?", a: "25", b: "15", c: "30", correct: "a" },
+    { quest: "10. Product of 12 and 3?", a: "36", b: "21", c: "42", correct: "a" }
+];
+
+function initQuest() {
+    quest.innerHTML = questions[index].quest;
+    document.getElementById("a").innerHTML = "A) " + questions[index].a;
+    document.getElementById("b").innerHTML = "B) " + questions[index].b;
+    document.getElementById("c").innerHTML = "C) " + questions[index].c;
+    progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+}
+
+function chooseAnswer(answer) {
+    userAnswers[index] = answer;
+    index++;
+    if(index < questions.length) initQuest();
+    else endQuiz();
+}
+
+function endQuiz() {
+    quest.innerHTML = "Quiz Completed!";
+    answersList.style.display = "none";
+    progress.style.display = "none";
+    document.getElementById("reset").style.display = "block";
+    submitBtn.style.display = "inline-block";
+}
+
+function resetQuiz() {
+    index = 0;
+    userAnswers.length = 0;
+    answersList.style.display = "block";
+    progress.style.display = "block";
+    document.getElementById("reset").style.display = "none";
+    submitBtn.style.display = "none";
+    initQuest();
+}
+
+function submitQuiz() {
+    const username = localStorage.getItem("username") || "Anonymous";
+    const submissionRef = database.ref('Maths_Submission/' + Date.now());
+    submissionRef.set({ user: username, answers: userAnswers })
+    .then(() => {
+        alert("Quiz submitted successfully!");
+        window.location.href = "Subjects.html";
+    }).catch((error) => {
+        alert("Error submitting quiz: " + error);
+    });
+}
+
+window.onload = initQuest;
+</script>
+
+<nav>
+    <ul>
+        <li><a href="Subjects.html">Back</a></li>
     </ul>
-    <div id="progress" class="progress"></div>
-    <button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
-    <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+</nav>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-            authDomain: "edvore-b11b7.firebaseapp.com",
-            databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-            projectId: "edvore-b11b7",
-            storageBucket: "edvore-b11b7.appspot.com",
-            messagingSenderId: "239809584061",
-            appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-    </script>
-
-    <script>
-        let index = 0;
-        const quest = document.getElementById("question");
-        const progress = document.getElementById("progress");
-        const userAnswers = [];
-        const answersList = document.getElementById("answers-list");
-
-        const questions = [
-            { quest: "1. What is the value of x in the equation 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
-            { quest: "2. What is the sum of the interior angles of a triangle?", a: "360 degrees", b: "90 degrees", c: "180 degrees", correct: "c" },
-            { quest: "3. What is the formula for the area of a circle?", a: "A = πr^2", b: "A = s²", c: "A = (b * h) / 2", correct: "a" },
-            { quest: "4. What is the value of 7² (7 squared)?", a: "49", b: "21", c: "42", correct: "a" },
-            { quest: "5. What is the sum of the numbers from 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
-            { quest: "6. What is the formula for the volume of a rectangular prism?", a: "V = L²H", b: "V = lwh", c: "A = πr²", correct: "b" },
-            { quest: "7. What is the value of x in the equation x / 4 = 9?", a: "x = 12", b: "x = 21", c: "x = 36", correct: "c" },
-            { quest: "8. What is the perimeter of a square with a side length of 5 cm?", a: "20 cm", b: "21 cm", c: "42 cm", correct: "a" },
-            { quest: "9. What is 15 + 27?", a: "42", b: "32", c: "52", correct: "c" },
-            { quest: "10. Find the product of 12 and 3", a: "36", b: "21", c: "42", correct: "a" }
-        ];
-
-        function initQuest() {
-            quest.innerHTML = questions[index].quest;
-            document.getElementById("a").innerHTML = "A) " + questions[index].a;
-            document.getElementById("b").innerHTML = "B) " + questions[index].b;
-            document.getElementById("c").innerHTML = "C) " + questions[index].c;
-            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
-        }
-
-        function chooseAnswer(answer) {
-            userAnswers[index] = answer;
-            index++;
-            if (index < questions.length) {
-                initQuest();
-            } else {
-                endQuiz();
-            }
-        }
-
-        function endQuiz() {
-            quest.innerHTML = "Quiz Completed!";
-            answersList.style.display = "none";
-            progress.style.display = "none";
-            document.getElementById("reset").style.display = "block";
-            document.getElementById("submit").style.display = "inline-block";
-        }
-
-        function resetQuiz() {
-            index = 0;
-            userAnswers.length = 0;
-            answersList.style.display = "block";
-            progress.style.display = "block";
-            document.getElementById("reset").style.display = "none";
-            document.getElementById("submit").style.display = "none";
-            initQuest();
-        }
-
-        function submitQuiz() {
-            const submissionRef = database.ref('Maths_submissions/' + Date.now());
-            submissionRef.set({ answers: userAnswers })
-            .then(() => {
-                alert("Quiz submitted successfully!");
-                window.location.href = "Subjects.html";
-            }).catch((error) => {
-                alert("Error submitting quiz: " + error);
-            });
-        }
-
-        window.onload = initQuest;
-    </script>
-
-    <nav>
-        <ul>
-            <li><a href="Subjects.html">Back</a></li>
-        </ul>
-    </nav>
 </div>
 </body>
-    </html>
+</html>
