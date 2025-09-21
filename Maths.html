@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maths Quiz</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -28,11 +28,11 @@ nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f
 <body>
 <div class="menu-container">
 <h1>Maths</h1>
-<h3 id="question"></h3> 
+<h3 id="question"></h3>
 <ul class="no-bullets" id="answers-list">
-    <li id="a" onclick="chooseAnswer('a')"></li>
-    <li id="b" onclick="chooseAnswer('b')"></li>
-    <li id="c" onclick="chooseAnswer('c')"></li>
+<li id="a" onclick="chooseAnswer('a')"></li>
+<li id="b" onclick="chooseAnswer('b')"></li>
+<li id="c" onclick="chooseAnswer('c')"></li>
 </ul>
 <div id="progress" class="progress"></div>
 <button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
@@ -41,15 +41,17 @@ nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
+// Firebase config
 const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+  apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+  authDomain: "edvore-b11b7.firebaseapp.com",
+  databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+  projectId: "edvore-b11b7",
+  storageBucket: "edvore-b11b7.appspot.com",
+  messagingSenderId: "239809584061",
+  appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
 };
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
@@ -61,75 +63,77 @@ const quest = document.getElementById("question");
 const progress = document.getElementById("progress");
 const userAnswers = [];
 const answersList = document.getElementById("answers-list");
-const submitBtn = document.getElementById("submit");
 
 const questions = [
-    { quest: "1. What is the value of x in 2x + 5 = 11?", a: "x = 2", b: "x = 3", c: "x = 5", correct: "b" },
-    { quest: "2. Sum of interior angles of a triangle?", a: "360°", b: "90°", c: "180°", correct: "c" },
-    { quest: "3. Formula for the area of a circle?", a: "A = πr²", b: "A = s²", c: "A = (b*h)/2", correct: "a" },
-    { quest: "4. Value of 7²?", a: "49", b: "21", c: "42", correct: "a" },
-    { quest: "5. Sum of numbers 1 to 10?", a: "29", b: "21", c: "55", correct: "c" },
-    { quest: "6. Volume of rectangular prism formula?", a: "V=L²H", b: "V=lwh", c: "A=πr²", correct: "b" },
-    { quest: "7. Value of x in x/4=9?", a: "x=12", b: "x=21", c: "x=36", correct: "c" },
-    { quest: "8. Perimeter of square side 5cm?", a: "20cm", b: "21cm", c: "42cm", correct: "a" },
-    { quest: "9. What is 10 + 15?", a: "25", b: "15", c: "30", correct: "a" },
-    { quest: "10. Product of 12 and 3?", a: "36", b: "21", c: "42", correct: "a" }
+{ quest: "1. What is 2 + 2?", a:"2", b:"4", c:"6", correct:"b" },
+{ quest: "2. What is 5 * 3?", a:"15", b:"53", c:"8", correct:"a" },
+{ quest: "3. What is 10 - 6?", a:"4", b:"6", c:"8", correct:"a" },
+{ quest: "4. What is 9 / 3?", a:"3", b:"6", c:"1", correct:"a" },
+{ quest: "5. What is the square of 4?", a:"8", b:"16", c:"12", correct:"b" },
+{ quest: "6. What is 7 + 6?", a:"13", b:"14", c:"17", correct:"a" },
+{ quest: "7. What is 12 - 5?", a:"7", b:"5", c:"6", correct:"a" },
+{ quest: "8. What is 3 * 3?", a:"6", b:"9", c:"12", correct:"b" },
+{ quest: "9. What is 8 / 2?", a:"2", b:"4", c:"6", correct:"b" },
+{ quest: "10. What is 6 * 6?", a:"36", b:"42", c:"30", correct:"a" }
 ];
 
 function initQuest() {
-    quest.innerHTML = questions[index].quest;
-    document.getElementById("a").innerHTML = "A) " + questions[index].a;
-    document.getElementById("b").innerHTML = "B) " + questions[index].b;
-    document.getElementById("c").innerHTML = "C) " + questions[index].c;
-    progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+quest.innerHTML = questions[index].quest;
+document.getElementById("a").innerHTML = "A) " + questions[index].a;
+document.getElementById("b").innerHTML = "B) " + questions[index].b;
+document.getElementById("c").innerHTML = "C) " + questions[index].c;
+progress.innerHTML = `Question ${index+1} of ${questions.length}`;
 }
 
 function chooseAnswer(answer) {
-    userAnswers[index] = answer;
-    index++;
-    if(index < questions.length) initQuest();
-    else endQuiz();
+userAnswers[index] = answer;
+index++;
+if(index < questions.length) initQuest();
+else endQuiz();
 }
 
 function endQuiz() {
-    quest.innerHTML = "Quiz Completed!";
-    answersList.style.display = "none";
-    progress.style.display = "none";
-    document.getElementById("reset").style.display = "block";
-    submitBtn.style.display = "inline-block";
+quest.innerHTML = "Quiz Completed!";
+answersList.style.display = "none";
+progress.style.display = "none";
+document.getElementById("reset").style.display = "block";
+document.getElementById("submit").style.display = "inline-block";
 }
 
 function resetQuiz() {
-    index = 0;
-    userAnswers.length = 0;
-    answersList.style.display = "block";
-    progress.style.display = "block";
-    document.getElementById("reset").style.display = "none";
-    submitBtn.style.display = "none";
-    initQuest();
+index = 0;
+userAnswers.length = 0;
+answersList.style.display = "block";
+progress.style.display = "block";
+document.getElementById("reset").style.display = "none";
+document.getElementById("submit").style.display = "none";
+initQuest();
 }
 
 function submitQuiz() {
-    const username = localStorage.getItem("username") || "Anonymous";
-    const submissionRef = database.ref('Maths_Submission/' + Date.now());
-    submissionRef.set({ user: username, answers: userAnswers })
-    .then(() => {
-        alert("Quiz submitted successfully!");
-        window.location.href = "Subjects.html";
-    }).catch((error) => {
-        alert("Error submitting quiz: " + error);
-    });
+const username = localStorage.getItem("username");
+if(!username) {
+alert("Error: username not found. Make sure you are logged in.");
+return;
+}
+const submissionRef = database.ref('Maths_Submission/' + Date.now());
+submissionRef.set({ user: username, answers: userAnswers })
+.then(() => {
+alert("Quiz submitted successfully!");
+window.location.href = "Subjects.html";
+}).catch((error) => {
+alert("Error submitting quiz: " + error);
+});
 }
 
 window.onload = initQuest;
 </script>
 
 <nav>
-    <ul>
-        <li><a href="Subjects.html">Back</a></li>
-    </ul>
+<ul>
+<li><a href="Subjects.html">Back</a></li>
+</ul>
 </nav>
-
 </div>
 </body>
 </html>
