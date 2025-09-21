@@ -1,139 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Geography Quiz</title>
-<style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-    .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
-    h1 { font-size:2.5em; color:#fff; }
-    h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-    .no-bullets { list-style:none; padding:0; margin:20px 0; }
-    .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
-    .no-bullets li:hover { background-color:#555; }
-    .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
-    .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-    .back-btn, .submit-btn { margin-top:20px; padding:10px 20px; color:white; border:none; border-radius:5px; cursor:pointer; }
-    .back-btn { background-color:#FF6347; }
-    .back-btn:hover { background-color:#e55347; }
-    .submit-btn { background-color:#28a745; display:none; }
-    .submit-btn:hover { background-color:#218838; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Geography Quiz</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+        .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+        h1 { font-size:2.5em; color:#fff; }
+        h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+        .no-bullets { list-style:none; padding:0; margin:20px 0; }
+        .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
+        .no-bullets li:hover { background-color:#555; }
+        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+        .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
+        .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+        .reset-btn:hover { background-color:#e55347; }
+        .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
+        .submit-btn:hover { background-color:#218838; }
+        nav ul { list-style:none; padding:0; margin:0; }
+        nav ul li { margin-top:20px; text-align:center; }
+        nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; }
+        nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
+    </style>
 </head>
 <body>
 <div class="menu-container">
-<h1>Geography</h1>
-<h3 id="question"></h3>
-<ul class="no-bullets" id="answers-list">
-    <li id="a" onclick="chooseAnswer('a')"></li>
-    <li id="b" onclick="chooseAnswer('b')"></li>
-    <li id="c" onclick="chooseAnswer('c')"></li>
-</ul>
-<div id="progress" class="progress"></div>
-<button id="back" class="back-btn" onclick="previousQuestion()">Back</button>
-<button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-</script>
-
-<script>
-let index = 0;
-const quest = document.getElementById("question");
-const progress = document.getElementById("progress");
-const answersList = document.getElementById("answers-list");
-const backBtn = document.getElementById("back");
-const submitBtn = document.getElementById("submit");
-const userAnswers = [];
-
-const questions = [
-    { quest:"1. What is the world's largest desert?", a:"Sahara desert", b:"Mojave desert", c:"Gobi desert", correct:"a" },
-    { quest:"2. Which river is the longest in South America?", a:"Mississippi river", b:"Nile river", c:"Amazon river", correct:"c" },
-    { quest:"3. What is the highest mountain peak in North America?", a:"Mount McKinley", b:"Mount Everest", c:"Mount Olympus", correct:"a" },
-    { quest:"4. Which city is the capital of Australia?", a:"Sydney", b:"Perth", c:"Canberra", correct:"c" },
-    { quest:"5. What is the largest island in the Mediterranean Sea?", a:"Corsica", b:"Crete", c:"Sicily", correct:"c" },
-    { quest:"6. Which river flows through the Grand Canyon?", a:"Colorado River", b:"Danube River", c:"Mekong River", correct:"a" },
-    { quest:"7. What is the smallest country in the world, both in terms of population and land area?", a:"South Africa", b:"Vatican City", c:"Japan", correct:"b" },
-    { quest:"8. Which mountain range runs along the border between France and Spain?", a:"Pyrenees", b:"Alps", c:"Andes", correct:"a" },
-    { quest:"9. What is the largest city in Scandinavia?", a:"Stockholm", b:"Oslo", c:"Copenhagen", correct:"a" },
-    { quest:"10. Which river is the longest in Asia?", a:"Nile River", b:"Amazon River", c:"Yangtze River", correct:"c" }
-];
-
-function initQuest(){
-    if(index < questions.length){
-        quest.innerHTML = questions[index].quest;
-        document.getElementById("a").innerHTML = "A) " + questions[index].a;
-        document.getElementById("b").innerHTML = "B) " + questions[index].b;
-        document.getElementById("c").innerHTML = "C) " + questions[index].c;
-        answersList.style.display = "block";
-        progress.innerHTML = `Question ${index+1} of ${questions.length}`;
-        backBtn.style.display = index > 0 ? "inline-block" : "none";
-        submitBtn.style.display = "none";
-    } else {
-        quest.innerHTML = "Quiz Completed!";
-        answersList.style.display = "none";
-        backBtn.style.display = "none";
-        submitBtn.style.display = "inline-block";
-    }
-}
-
-function chooseAnswer(answer){
-    userAnswers[index] = answer;
-    showFeedback(answer===questions[index].correct ? "Correct!" : "Wrong!");
-    index++;
-    initQuest();
-}
-
-function previousQuestion(){
-    if(index > 0){
-        index--;
-        initQuest();
-    }
-}
-
-function showFeedback(message){
-    let feedback = document.createElement("div");
-    feedback.innerHTML = message;
-    feedback.classList.add("feedback");
-    document.body.appendChild(feedback);
-    setTimeout(()=>feedback.remove(),1500);
-}
-
-function submitQuiz(){
-    const username = localStorage.getItem("username") || "Anonymous";
-    database.ref('geography_submissions/' + Date.now()).set({
-        username: username,
-        answers: userAnswers
-    }).then(()=>{
-        alert("Quiz submitted successfully!");
-        window.location.href = "Subjects.html";
-    }).catch(error=>{
-        alert("Error submitting quiz: "+error);
-    });
-}
-
-window.onload = initQuest;
-</script>
-
-<nav>
-    <ul>
-        <li><a href="Subjects.html">Back</a></li>
+    <h1>Geography</h1>
+    <h3 id="question"></h3> 
+    <ul class="no-bullets" id="answers-list">
+        <li id="a" onclick="chooseAnswer('a')"></li>
+        <li id="b" onclick="chooseAnswer('b')"></li>
+        <li id="c" onclick="chooseAnswer('c')"></li>
     </ul>
-</nav>
+    <div id="progress" class="progress"></div>
+    <button id="reset" class="reset-btn" onclick="resetQuiz()">Restart Quiz</button>
+    <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+            authDomain: "edvore-b11b7.firebaseapp.com",
+            databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+            projectId: "edvore-b11b7",
+            storageBucket: "edvore-b11b7.appspot.com",
+            messagingSenderId: "239809584061",
+            appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+
+    <script>
+        let index = 0;
+        const quest = document.getElementById("question");
+        const progress = document.getElementById("progress");
+        const userAnswers = [];
+        const answersList = document.getElementById("answers-list");
+
+        const questions = [
+            { quest: "1. What is the world's largest desert?", a: "Sahara desert", b: "Mojave desert", c: "Gobi desert", correct: "a" },
+            { quest: "2. Which river is the longest in South America?", a: "Mississippi river", b: "Nile river", c: "Amazon river", correct: "c" },
+            { quest: "3. What is the highest mountain peak in North America?", a: "Mount McKinley", b: "Mount Everest", c: "Mount Olympus", correct: "a" },
+            { quest: "4. Which city is the capital of Australia?", a: "Sydney", b: "Perth", c: "Canberra", correct: "c" },
+            { quest: "5. What is the largest island in the Mediterranean Sea?", a: "Corsica", b: "Crete", c: "Sicily", correct: "c" },
+            { quest: "6. Which river flows through the Grand Canyon?", a: "Colorado River", b: "Danube River", c: "Mekong River", correct: "a" },
+            { quest: "7. What is the smallest country in the world, both in terms of population and land area?", a: "South Africa", b: "Vatican City", c: "Japan", correct: "b" },
+            { quest: "8. Which mountain range runs along the border between France and Spain?", a: "Pyrenees", b: "Alps", c: "Andes", correct: "a" },
+            { quest: "9. What is the largest city in Scandinavia?", a: "Stockholm", b: "Oslo", c: "Copenhagen", correct: "a" },
+            { quest: "10. Which river is the longest in Asia?", a: "Nile River", b: "Amazon River", c: "Yangtze River", correct: "c" }
+        ];
+
+        function initQuest() {
+            quest.innerHTML = questions[index].quest;
+            document.getElementById("a").innerHTML = "A) " + questions[index].a;
+            document.getElementById("b").innerHTML = "B) " + questions[index].b;
+            document.getElementById("c").innerHTML = "C) " + questions[index].c;
+            progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
+        }
+
+        function chooseAnswer(answer) {
+            userAnswers[index] = answer;
+            index++;
+            if (index < questions.length) {
+                initQuest();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            quest.innerHTML = "Quiz Completed!";
+            answersList.style.display = "none";
+            progress.style.display = "none";
+            document.getElementById("reset").style.display = "block";
+            document.getElementById("submit").style.display = "inline-block";
+        }
+
+        function resetQuiz() {
+            index = 0;
+            userAnswers.length = 0;
+            answersList.style.display = "block";
+            progress.style.display = "block";
+            document.getElementById("reset").style.display = "none";
+            document.getElementById("submit").style.display = "none";
+            initQuest();
+        }
+
+        function submitQuiz() {
+            const username = localStorage.getItem("username") || "Anonymous";
+            const submissionRef = database.ref('quiz_submissions/' + Date.now());
+            submissionRef.set({ user: username, answers: userAnswers })
+            .then(() => {
+                alert("Quiz submitted successfully!");
+                window.location.href = "Subjects.html";
+            }).catch((error) => {
+                alert("Error submitting quiz: " + error);
+            });
+        }
+
+        window.onload = initQuest;
+    </script>
+
+    <nav>
+        <ul>
+            <li><a href="Subjects.html">Back</a></li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>
