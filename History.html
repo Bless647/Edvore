@@ -6,132 +6,134 @@
 <title>History Quiz</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #E0E0E0;
-    padding: 20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-.menu-container {
-    background-color: black;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow:0 4px 8px rgba(0,0,0,0.3);
-    text-align:center;
-    width:100%;
-    max-width:600px;
-}
+body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+.menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
 h1 { font-size:2.5em; color:#fff; }
 h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-.no-bullets { list-style-type:none; padding:0; margin:20px 0; }
-.no-bullets li {
-    margin:10px 0;
-    font-size:1.2em;
-    padding:10px;
-    background-color:#333;
-    border-radius:5px;
-    cursor:pointer;
-    transition: background-color 0.3s ease;
-}
+.no-bullets { list-style:none; padding:0; margin:20px 0; }
+.no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
 .no-bullets li:hover { background-color:#555; }
-.feedback {
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background-color:#2d7b36;
-    color:white;
-    padding:15px;
-    border-radius:5px;
-    font-size:1.2em;
-    z-index:100;
-}
+.feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#2d7b36; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
 .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-.reset-btn {
-    margin-top:20px;
-    padding:10px 20px;
-    background-color:#FF6347;
-    color:white;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-}
-.reset-btn:hover { background-color:#e55347; }
+nav ul { list-style:none; margin-top:20px; }
+nav ul li { margin-top:20px; text-align:center; }
+nav ul li a { display:inline-block; padding:12px 30px; background:linear-gradient(145deg, #56ccf2, #2f80ed); color:white; font-size:1.2em; font-weight:bold; text-decoration:none; border-radius:8px; transition:0.3s; }
+nav ul li a:hover { transform:scale(1.1); background:linear-gradient(145deg, #2f80ed, #56ccf2); box-shadow:0 8px 15px rgba(0,0,0,0.2); }
+.submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1.2em; display:none; }
+.submit-btn:hover { background-color:#218838; }
 </style>
 </head>
 <body>
-
 <div class="menu-container">
-<h1>History Quiz</h1>
+<h1>History</h1>
 <h3 id="question"></h3>
-<ul class="no-bullets">
-<li id="a" onclick="chooseAnswer('a')"></li>
-<li id="b" onclick="chooseAnswer('b')"></li>
-<li id="c" onclick="chooseAnswer('c')"></li>
+<ul class="no-bullets" id="answers-list">
+    <li id="a" onclick="chooseAnswer('a')"></li>
+    <li id="b" onclick="chooseAnswer('b')"></li>
+    <li id="c" onclick="chooseAnswer('c')"></li>
 </ul>
 <div id="progress" class="progress"></div>
-<button id="reset" class="reset-btn" style="display:none;" onclick="resetQuiz()">Restart Quiz</button>
+<nav>
+    <ul>
+        <li><a href="#" id="backBtn" onclick="goBack()" style="display:none;">Back</a></li>
+    </ul>
+</nav>
+<button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-let index = 0;
-let quest = document.getElementById("question");
-let progress = document.getElementById("progress");
+const firebaseConfig = {
+  apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+  authDomain: "edvore-b11b7.firebaseapp.com",
+  databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+  projectId: "edvore-b11b7",
+  storageBucket: "edvore-b11b7.appspot.com",
+  messagingSenderId: "239809584061",
+  appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-let questions = [
-    { quest:"1. Who was the first President of the United States?", a:"George Washington", b:"Abraham Lincoln", c:"Thomas Jefferson", correct:"a" },
-    { quest:"2. The Great Wall of China was built to protect against which group?", a:"Mongols", b:"Romans", c:"Vikings", correct:"a" },
-    { quest:"3. Which year did World War II end?", a:"1944", b:"1945", c:"1946", correct:"b" },
-    { quest:"4. Who discovered America in 1492?", a:"Christopher Columbus", b:"Leif Erikson", c:"Amerigo Vespucci", correct:"a" },
-    { quest:"5. What was the ancient Egyptian writing system called?", a:"Cuneiform", b:"Hieroglyphics", c:"Latin", correct:"b" },
-    { quest:"6. Which empire was ruled by Julius Caesar?", a:"Roman Empire", b:"Greek Empire", c:"Persian Empire", correct:"a" },
-    { quest:"7. Who was the famous civil rights leader in the USA?", a:"Martin Luther King Jr.", b:"Malcolm X", c:"Rosa Parks", correct:"a" },
-    { quest:"8. The Renaissance began in which country?", a:"Italy", b:"France", c:"England", correct:"a" },
-    { quest:"9. The Cold War was primarily between which two countries?", a:"USA and USSR", b:"USA and Germany", c:"UK and USSR", correct:"a" },
-    { quest:"10. Who wrote the 'Magna Carta'?", a:"King John", b:"Queen Elizabeth I", c:"William the Conqueror", correct:"a" }
+let index = 0;
+const quest = document.getElementById("question");
+const progress = document.getElementById("progress");
+const answersList = document.getElementById("answers-list");
+const submitBtn = document.getElementById("submit");
+const backBtn = document.getElementById("backBtn");
+const userAnswers = [];
+
+const questions = [
+  { quest:"1. Who was the first President of the United States?", a:"Abraham Lincoln", b:"George Washington", c:"Thomas Jefferson", correct:"b" },
+  { quest:"2. In which year did World War II end?", a:"1945", b:"1939", c:"1918", correct:"a" },
+  { quest:"3. Who discovered America in 1492?", a:"Christopher Columbus", b:"Vasco da Gama", c:"Ferdinand Magellan", correct:"a" },
+  { quest:"4. The Great Fire of London occurred in which year?", a:"1666", b:"1600", c:"1707", correct:"a" },
+  { quest:"5. Who was known as the Maid of Orleans?", a:"Joan of Arc", b:"Marie Curie", c:"Queen Elizabeth", correct:"a" },
+  { quest:"6. The Berlin Wall fell in which year?", a:"1989", b:"1991", c:"1975", correct:"a" },
+  { quest:"7. Who wrote the Declaration of Independence?", a:"Benjamin Franklin", b:"John Adams", c:"Thomas Jefferson", correct:"c" },
+  { quest:"8. Who was the first man to step on the moon?", a:"Neil Armstrong", b:"Buzz Aldrin", c:"Yuri Gagarin", correct:"a" },
+  { quest:"9. The Renaissance began in which country?", a:"Italy", b:"France", c:"Germany", correct:"a" },
+  { quest:"10. Who was the British Prime Minister during World War II?", a:"Winston Churchill", b:"Neville Chamberlain", c:"Clement Attlee", correct:"a" }
 ];
 
-function initQuiz() {
-    quest.innerHTML = questions[index].quest;
-    document.getElementById("a").innerHTML = "A) " + questions[index].a;
-    document.getElementById("b").innerHTML = "B) " + questions[index].b;
-    document.getElementById("c").innerHTML = "C) " + questions[index].c;
-    progress.innerHTML = `Question ${index+1} of ${questions.length}`;
+function initQuest() {
+  quest.innerHTML = questions[index].quest;
+  document.getElementById("a").innerHTML = "A) "+questions[index].a;
+  document.getElementById("b").innerHTML = "B) "+questions[index].b;
+  document.getElementById("c").innerHTML = "C) "+questions[index].c;
+  progress.innerHTML = `Question ${index+1} of ${questions.length}`;
+  backBtn.style.display = index>0?"inline-block":"none";
+  submitBtn.style.display = "none";
+  answersList.style.display = "block";
 }
 
 function chooseAnswer(answer){
-    if(answer===questions[index].correct){
-        showFeedback("Correct!");
-        index++;
-        if(index>=questions.length){
-            showFeedback("Congratulations! You've finished the quiz.");
-            document.getElementById("reset").style.display="block";
-        } else {
-            initQuiz();
-        }
-    } else {
-        showFeedback("Wrong answer. Try again!");
-    }
+  userAnswers[index] = answer;
+  showFeedback(answer===questions[index].correct?"Correct!":"Wrong answer!");
+  index++;
+  if(index<questions.length){
+    initQuest();
+  } else {
+    quest.innerHTML = "History Quiz Completed!";
+    answersList.style.display="none";
+    progress.style.display="none";
+    backBtn.style.display="none";
+    submitBtn.style.display="inline-block";
+  }
 }
 
-function showFeedback(message){
-    let fb=document.createElement("div");
-    fb.classList.add("feedback");
-    fb.innerHTML=message;
-    document.body.appendChild(fb);
-    setTimeout(()=>fb.remove(),2000);
+function goBack(){
+  if(index>0){
+    index--;
+    initQuest();
+  }
 }
 
-function resetQuiz(){
-    index=0;
-    document.getElementById("reset").style.display="none";
-    initQuiz();
+function showFeedback(msg){
+  let feedback=document.createElement("div");
+  feedback.innerHTML=msg;
+  feedback.classList.add("feedback");
+  document.body.appendChild(feedback);
+  setTimeout(()=>feedback.remove(),2000);
 }
 
-initQuiz();
+function submitQuiz(){
+  const username=localStorage.getItem("username");
+  if(!username){
+    alert("You must be logged in to submit!");
+    window.location.href="index.html";
+    return;
+  }
+  const refDB=database.ref('History_Submission/'+Date.now());
+  refDB.set({username:username,answers:userAnswers})
+  .then(()=>{
+    alert("Your answers were sent to Firebase successfully!");
+    window.location.href="Subjects.html";
+  })
+  .catch(err=>{alert("Error submitting quiz: "+err);});
+}
+
+window.onload=initQuest;
 </script>
 </div>
 </body>
