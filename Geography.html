@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Geography Quiz</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-        .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
-        h1 { font-size:2.5em; color:#fff; }
-        h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
-        .no-bullets { list-style:none; padding:0; margin:20px 0; }
-        .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
-        .no-bullets li:hover { background-color:#555; }
-        .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); background-color:#007bff; color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
-        .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
-        .reset-btn { margin-top:20px; padding:10px 20px; background-color:#FF6347; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-        .reset-btn:hover { background-color:#e55347; }
-        .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; }
-        .submit-btn:hover { background-color:#218838; }
-        .back-btn { margin-top:20px; padding:10px 20px; background-color:#007bff; color:white; border:none; border-radius:5px; cursor:pointer; text-decoration:none; display:none; }
-        .back-btn:hover { background-color:#0056b3; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Geography Quiz</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+    h1 { font-size:2.5em; color:#fff; }
+    h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+    .no-bullets { list-style:none; padding:0; margin:20px 0; }
+    .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
+    .no-bullets li:hover { background-color:#555; }
+    .feedback { position:fixed; top:10%; left:50%; transform:translate(-50%, -50%); color:white; padding:15px; border-radius:5px; font-size:1.2em; z-index:100; }
+    .progress { font-size:1.2em; margin-top:10px; color:#e0e0e0; }
+    .submit-btn { margin-top:20px; padding:10px 20px; background-color:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; display:none; transition:0.3s; }
+    .submit-btn:hover { background-color:#218838; transform:scale(1.05); box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+    .back-btn { margin-top:20px; padding:10px 20px; background-color:#007bff; color:white; border:none; border-radius:5px; cursor:pointer; text-decoration:none; display:none; transition:0.3s; }
+    .back-btn:hover { background-color:#0056b3; transform:scale(1.3); }
+</style>
 </head>
 <body>
 <div class="menu-container">
     <h1>Geography</h1>
-    <h3 id="question"></h3>
+    <h3 id="question"></h3> 
     <ul class="no-bullets" id="answers-list">
         <li id="a" onclick="chooseAnswer('a')"></li>
         <li id="b" onclick="chooseAnswer('b')"></li>
@@ -34,7 +32,6 @@
     </ul>
     <div id="progress" class="progress"></div>
     <button id="back" class="back-btn" onclick="goBack()">Back</button>
-    <button id="reset" class="reset-btn" onclick="resetQuiz()">Restart Quiz</button>
     <button id="submit" class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
     <!-- Firebase SDK -->
@@ -60,7 +57,6 @@
         const progress = document.getElementById("progress");
         const answersList = document.getElementById("answers-list");
         const backBtn = document.getElementById("back");
-        const resetBtn = document.getElementById("reset");
         const submitBtn = document.getElementById("submit");
         const userAnswers = [];
 
@@ -72,7 +68,7 @@
             { quest: "5. What is the largest island in the Mediterranean Sea?", a: "Corsica", b: "Crete", c: "Sicily", correct: "c" },
             { quest: "6. Which river flows through the Grand Canyon?", a: "Colorado River", b: "Danube River", c: "Mekong River", correct: "a" },
             { quest: "7. What is the smallest country in the world?", a: "South Africa", b: "Vatican City", c: "Japan", correct: "b" },
-            { quest: "8. Which mountain range runs along the border between France and Spain?", a: "Pyrenees", b: "Alps", c: "Andes", correct: "a" },
+            { quest: "8. Which mountain range runs along France and Spain?", a: "Pyrenees", b: "Alps", c: "Andes", correct: "a" },
             { quest: "9. What is the largest city in Scandinavia?", a: "Stockholm", b: "Oslo", c: "Copenhagen", correct: "a" },
             { quest: "10. Which river is the longest in Asia?", a: "Nile River", b: "Amazon River", c: "Yangtze River", correct: "c" }
         ];
@@ -83,24 +79,25 @@
             document.getElementById("b").innerHTML = "B) " + questions[index].b;
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
             progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
-            backBtn.style.display = "inline-block"; // show back button during questions
+            backBtn.style.display = "inline-block";
         }
 
         function chooseAnswer(answer) {
             userAnswers[index] = answer;
-            showFeedback(answer === questions[index].correct ? "Correct!" : "Wrong answer!");
+            showFeedback(answer === questions[index].correct ? "Correct!" : "Incorrect!", answer === questions[index].correct);
             index++;
             if (index < questions.length) {
-                setTimeout(initQuest, 300); // short delay to show feedback
+                setTimeout(initQuest, 300);
             } else {
                 setTimeout(endQuiz, 300);
             }
         }
 
-        function showFeedback(message) {
+        function showFeedback(message, isCorrect) {
             let feedback = document.createElement("div");
             feedback.innerHTML = message;
             feedback.classList.add("feedback");
+            feedback.style.backgroundColor = isCorrect ? "green" : "red";
             document.body.appendChild(feedback);
             setTimeout(() => feedback.remove(), 1000);
         }
@@ -109,38 +106,23 @@
             quest.innerHTML = "Quiz Completed!";
             answersList.style.display = "none";
             progress.style.display = "none";
-            backBtn.style.display = "none"; // remove back button at end
-            resetBtn.style.display = "block";
+            backBtn.style.display = "none";
             submitBtn.style.display = "inline-block";
         }
 
-        function resetQuiz() {
-            index = 0;
-            userAnswers.length = 0;
-            answersList.style.display = "block";
-            progress.style.display = "block";
-            resetBtn.style.display = "none";
-            submitBtn.style.display = "none";
-            initQuest();
+        function goBack() {
+            window.location.href = "Subjects.html";
         }
 
         function submitQuiz() {
-            const submissionRef = database.ref('Geography Submissions/' + Date.now());
+            const submissionRef = database.ref('Geography_Submissions/' + Date.now());
             submissionRef.set({ answers: userAnswers })
-            .then(() => {
-                alert("Quiz submitted successfully!");
-                window.location.href = "Subjects.html";
-            }).catch((error) => {
-                alert("Error submitting quiz: " + error);
-            });
-        }
-
-        function goBack() {
-            window.location.href = "Subjects.html"; // back button during questions
+            .then(() => { alert("Quiz submitted successfully!"); })
+            .catch((error) => { alert("Error submitting quiz: " + error); });
         }
 
         window.onload = initQuest;
     </script>
 </div>
 </body>
-    </html>
+</html>
