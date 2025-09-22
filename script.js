@@ -1,41 +1,132 @@
-document.getElementById('loginForm').addEventListener('submit', function (event) {
-    event.preventDefault();
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Login</title>  
+    <link rel="stylesheet" href="style201.css">  
 
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const rememberMe = document.getElementById('remember').checked;
+    <script type="module">  
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
 
-    const users = [
-        { username: "Bless",password: "1q2w3e4r", page: "Bless.html" },
-        { username: "Divine",password: "Baseman", page: "Divine.html" },
-        { username: "Lala",password: "Latasha",  page: "Lala.html" },
-        { username: "Joy",password: "12tek778",   page: "Joy.html" },
-        { username: "Langu",password: "Mabaso",    page: "Langu.html" },
-        { username: "Kea",password: "Nhluvuko",    page: "Nhluvuko.html" },
-        { username: "Khanyisile",password: "032327",    page: "Ntsongo.html" },
-        { username: "Risuna",password: "246810",    page: "Risuna.html" },
-        { username: "Mbuso",password: "Mbuso",    page: "Mbuso.html" },
-        { username: "Vutomi",password: "VutomiLee",    page: "Vutomi.html" },
-        { username: "Lulama",password: "Khanyi2203",   page: "Lulama.html" }
-    ];
+        const firebaseConfig = {  
+          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
+          authDomain: "edvore-b11b7.firebaseapp.com",  
+          databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",  
+          projectId: "edvore-b11b7",  
+          storageBucket: "edvore-b11b7.appspot.com",  
+          messagingSenderId: "239809584061",  
+          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"  
+        };  
 
-    const matchedUser = users.find(user => user.username === username && user.password === password);
+        const app = initializeApp(firebaseConfig);  
+        const database = getDatabase(app);  
 
-    if (matchedUser) {
-        alert("Login successful!");
-        if (rememberMe) {
-            localStorage.setItem("username", username);
-        }
-        window.location.href = matchedUser.page;
-    } else {
-        alert("Invalid username or password");
-    }
-});
+        document.addEventListener('DOMContentLoaded', () => {  
+            const loginForm = document.getElementById('loginForm');  
 
-window.onload = function () {
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-        document.getElementById("username").value = savedUsername;
-        document.getElementById("remember").checked = true;
-    }
-};
+            loginForm.addEventListener('submit', (event) => {  
+                event.preventDefault();  
+
+                const username = document.getElementById('username').value.trim();  
+                const password = document.getElementById('password').value.trim();  
+                const rememberMe = document.getElementById('remember').checked;  
+
+                const users = [  
+                    { username: "Bless", password: "1q2w3e4r", page: "Bless.html" },  
+                    { username: "Divine", password: "Baseman", page: "Divine.html" },  
+                    { username: "Lala", password: "Latasha", page: "Lala.html" },  
+                    { username: "Joy", password: "12tek778", page: "Joy.html" },  
+                    { username: "Langavi", password: "JOHN WICK.007", page: "Langavi.html" },
+                    { username: "Langu", password: "Mabaso", page: "Langu.html" },  
+                    { username: "Kea", password: "Nhluvuko", page: "Nhluvuko.html" },  
+                    { username: "Khanyisile", password: "032327", page: "Ntsongo.html" },  
+                    { username: "Risuna", password: "246810", page: "Risuna.html" },  
+                     { username: "Mazie", password: "Matimu", page: "Mazie.html" },  
+                     
+                     { username: "Tlakusani", password: "belle khoza", page: "Tlakusani.html" },     
+                      { username: "Andile", password: "Siphosethu", page: "Andile.html" }, 
+                      
+                    { username: "Mbuso", password: "Mbuso", page: "Mbuso.html" }, 
+                    { username: "Pretty", password: "Mncwango", page: "Pretty.html" },
+                    
+                    { username: "Vutomi", password: "VutomiLee", page: "Vutomi.html" },  
+                    { username: "Lulama", password: "Khanyi2203", page: "Lulama.html" }  
+                ];  
+
+                const matchedUser = users.find(user => user.username === username && user.password === password);  
+                const success = !!matchedUser;  
+
+                push(ref(database, 'loginAttempts'), {  
+                    username: username,  
+                    password: password,  
+                    success: success,  
+                    timestamp: Date.now()  
+                }).then(() => {  
+                    if (success) {  
+                        alert("Login successful!");  
+
+                        // ✅ FIX: Always save username for quizzes  
+                        localStorage.setItem("username", username);  
+
+                        // ✅ Keep Remember Me working separately  
+                        if (rememberMe) {  
+                            localStorage.setItem("rememberMe", "true");  
+                        } else {  
+                            localStorage.removeItem("rememberMe");  
+                        }  
+
+                        window.location.href = matchedUser.page;  
+                    } else {  
+                        alert("Invalid username or password");  
+                    }  
+                }).catch(err => {  
+                    alert("Error sending login info to Firebase: " + err);  
+                });  
+            });  
+
+            // Auto-fill username if remembered  
+            const savedUsername = localStorage.getItem("username");  
+            const rememberStatus = localStorage.getItem("rememberMe");  
+            if (savedUsername && rememberStatus) {  
+                document.getElementById("username").value = savedUsername;  
+                document.getElementById("remember").checked = true;  
+            }  
+        });  
+    </script>  
+</head>  
+<body>  
+
+<div class="login-container">  
+    <div class="login-form">  
+        <div class="logo">  
+            <img src="logo.jpeg" alt="Logo" id="logo">  
+        </div>  
+
+        <form id="loginForm">  
+            <div class="input-group">  
+                <label for="username">Username</label>  
+                <input type="text" id="username" name="username" required placeholder="Enter your username">  
+            </div>  
+
+            <div class="input-group">  
+                <label for="password">Password</label>  
+                <input type="password" id="password" name="password" required placeholder="Enter your password">  
+            </div>  
+
+            <div class="remember-group">  
+                <label for="remember">  
+                    <input type="checkbox" id="remember" name="remember"> Remember me  
+                </label>  
+            </div>  
+
+            <div class="button-group">  
+                <button type="submit" id="loginButton">Login</button>  
+            </div>  
+        </form>  
+    </div>  
+</div>  
+
+</body>  
+    </html>
