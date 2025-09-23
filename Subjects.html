@@ -1,255 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Subjects Page</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjects</title>
+  <style>
     body {
-        background-color: #121212;
-        font-family: Arial, sans-serif;
-        color: white;
-        margin: 0;
-        padding: 0;
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
-    .menu-container {
-        text-align: center;
-        padding: 40px;
-        margin-top: 50px;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 10px;
-        width: 80%;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
     }
 
-    h1 {
-        font-size: 2.5em;
-        margin-bottom: 30px;
+    .subject-box {
+      background: #1e1e1e;
+      border-radius: 10px;
+      width: 200px;
+      height: 120px;
+      margin: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
-    h3 {
-        font-size: 1.6em;
-        margin: 20px 0;
-        color: #fff;
+    .subject-box:hover {
+      transform: scale(1.05);
     }
 
-    button {
-        padding: 12px 30px;
-        background: linear-gradient(145deg, #56ccf2, #2f80ed);
-        color: white;
-        font-size: 1.2em;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin: 10px;
-        transition: background-color 0.3s, transform 0.2s;
+    /* Feedback button (bottom-right) */
+    .feedback-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #56ccf2;
+      color: #121212;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1em;
+      font-weight: bold;
     }
 
-    button:hover {
-        background: linear-gradient(145deg, #2f80ed, #56ccf2);
-        transform: scale(1.1);
+    .feedback-btn:hover {
+      background: #2d9cdb;
     }
 
-    button:active {
-        transform: scale(1);
+    /* My Records button (bottom-left) */
+    .records-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #27ae60;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1em;
+      font-weight: bold;
     }
 
-    button:focus {
-        outline: none;
-        box-shadow: 0 0 5px #56ccf2;
+    .records-btn:hover {
+      background: #1e874b;
     }
-
-    #feedback-button {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #2f80ed;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 50px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
-        z-index: 1000;
-    }
-
-    #feedback-button:hover {
-        background: #56ccf2;
-        transform: scale(1.1);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
-
-    #feedback-modal {
-        display: none; /* hidden by default */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        justify-content: center;
-        align-items: center;
-        z-index: 1001;
-    }
-
-    #feedback-content {
-        background: #1a1a1a;
-        padding: 30px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 400px;
-        color: white;
-        text-align: center;
-    }
-
-    #feedback-text {
-        width: 100%;
-        height: 100px;
-        margin: 15px 0;
-        padding: 10px;
-        border-radius: 8px;
-        border: none;
-        resize: none;
-    }
-
-    #send-feedback, #close-feedback {
-        padding: 10px 20px;
-        margin: 5px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    #send-feedback {
-        background: #2f80ed;
-        color: white;
-    }
-
-    #send-feedback:hover {
-        background: #56ccf2;
-    }
-
-    #close-feedback {
-        background: #555;
-        color: white;
-    }
-
-    #close-feedback:hover {
-        background: #777;
-    }
-
-    nav ul {
-        list-style-type: none;
-        margin-top: 30px;
-        padding: 0;
-    }
-
-    nav ul li {
-        margin-top: 15px;
-        font-size: 1.2em;
-    }
-
-    nav ul li a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        padding: 10px 30px;
-        background: #333;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    nav ul li a:hover {
-        background: #555;
-    }
-</style>
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="subject-box" onclick="location.href='Maths.html'">Maths</div>
+    <div class="subject-box" onclick="location.href='English.html'">English</div>
+    <div class="subject-box" onclick="location.href='History.html'">History</div>
+  </div>
 
-<div class="menu-container">
-    <h1>Choose a Subject</h1>
-    <h3>Select one of the options below:</h3>
-    <button onclick="window.location.href='User_History.html'">My Records</button>
-    <button onclick="window.location.href='History.html'">History</button>
-    <button onclick="window.location.href='Geography.html'">Geography</button>
-    <button onclick="window.location.href='Maths.html'">Maths</button>
-    <button onclick="window.location.href='Natural Science.html'">Natural Science</button>
-    <button onclick="window.location.href='English.html'">English</button>
-</div>
+  <!-- My Records (bottom-left) -->
+  <a href="User History.html" class="records-btn">📁 My Records</a>
 
-<!-- Feedback Button -->
-<div id="feedback-button">💬 Send Feedback</div>
-
-<div id="feedback-modal">
-    <div id="feedback-content">
-        <h3>Send Feedback</h3>
-        <textarea id="feedback-text" placeholder="Type your feedback here..."></textarea>
-        <button id="send-feedback">Send</button>
-        <button id="close-feedback">Cancel</button>
-    </div>
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script>
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-
-  // Feedback functionality
-  const feedbackButton = document.getElementById('feedback-button');
-  const feedbackModal = document.getElementById('feedback-modal');
-  const closeFeedback = document.getElementById('close-feedback');
-  const sendFeedback = document.getElementById('send-feedback');
-  const feedbackText = document.getElementById('feedback-text');
-
-  feedbackButton.addEventListener('click', () => {
-    feedbackModal.style.display = 'flex';
-  });
-
-  closeFeedback.addEventListener('click', () => {
-    feedbackModal.style.display = 'none';
-    feedbackText.value = '';
-  });
-
-  sendFeedback.addEventListener('click', () => {
-    const text = feedbackText.value.trim();
-    if(text !== "") {
-      const feedbackRef = database.ref('feedbacks');
-      feedbackRef.push({
-        message: text,
-        timestamp: Date.now()
-      }).then(() => {
-        alert("Feedback sent! Thank you.");
-        feedbackModal.style.display = 'none';
-        feedbackText.value = '';
-      }).catch(err => {
-        alert("Error sending feedback: " + err);
-      });
-    } else {
-      alert("Please enter feedback before sending.");
-    }
-  });
-</script>
-
+  <!-- Feedback (bottom-right) -->
+  <a href="Feedback.html" class="feedback-btn">💬 Send Feedback</a>
 </body>
+</html>
                                                                                   </html>
+
