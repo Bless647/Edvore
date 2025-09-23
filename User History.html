@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz History</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; }
+    .history-container { width:100%; max-width:1000px; margin-top:40px; }
+    h1 { text-align:center; margin-bottom:30px; color:#fff; font-size:2.5em; }
+    table { width:100%; border-collapse:collapse; margin-bottom:30px; }
+    th, td { padding:12px; border:1px solid #444; text-align:left; }
+    th { background-color:#333; }
+    tr:nth-child(even) { background-color:#1a1a1a; }
+    tr:hover { background-color:#2d2d2d; }
+    .correct { color: #2ecc71; font-weight:bold; }
+    .incorrect { color: #e74c3c; font-weight:bold; }
+    .back-btn, .delete-btn { display:inline-block; margin-bottom:20px; padding:12px 25px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; transition:0.3s; }
+    .back-btn { background-color:#007bff; color:white; text-decoration:none; }
+    .back-btn:hover { background-color:#0056b3; transform:scale(1.2); box-shadow:0 5px 15px rgba(0,0,0,0.3); }
+    .delete-btn { background-color:#e74c3c; color:white; }
+    .delete-btn:hover { background-color:#c0392b; transform:scale(1.1); }
+    .attempt-title { margin-top:30px; margin-bottom:10px; font-size:1.4em; color:#fff; display:flex; justify-content:space-between; align-items:center; }
+</style>
+</head>
+<body>
+<div class="history-container">
+    <button class="back-btn" onclick="goBack()">Back to Subjects</button>
+    <h1>Your Quiz History</h1>
+    <div id="history-content"></div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+    authDomain: "edvore-b11b7.firebaseapp.com",
+    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+    projectId: "edvore-b11b7",
+    storageBucket: "edvore-b11b7.appspot.com",
+    messagingSenderId: "239809584061",
+    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+const username = localStorage.getItem("username");
+const historyContent = document.getElementById("history-content");
+
+function goBack() {
+    window.location.href = "Subjects.html";
+}
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+}
+
+function deleteAttempt(key) {
+    if(confirm("Are you sure you want to delete this attempt?")) {
+        database.ref('Quiz_Submissions/' + key).remove()
+        .then(() => alert("Attempt deleted!"))
+        .catch(err => alert("Error deleting attempt: " + err));
+    }
+}
+
+// Fetch all quiz submissions
+database.ref('Quiz_Submissions/').on('value', snapshot => {
+    historyContent.innerHTML = '';
+    const data = snapshot.val();
+    if(!data) {
+        historyContent.innerHTML = '<p>No quiz attempts found.</p>';
+        return;
+    }
+    Object.keys(data).forEach(key => {
+        const attempt = data[key];
+        if(attempt.username !== username) return; // show only logged-in user
+
+        const attemptDiv = document.createElement('div');
+        attemptDiv.classList.add('attempt');
+
+        const titleDiv = document.createElement('div');
+        titleDiv.classList.add('attempt-title');
+        titleDiv.innerHTML = `<span>${attempt.subject} - ${formatTimestamp(attempt.timestamp)} - Score: ${attempt.score}/${attempt.total}</span>`;
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => deleteAttempt(key);
+        titleDiv.appendChild(delBtn);
+
+        attemptDiv.appendChild(titleDiv);
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        thead.innerHTML = `<tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr>`;
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        attempt.questions.forEach((q,i) => {
+            const tr = document.createElement('tr');
+            const userAns = attempt.answers[i];
+            tr.innerHTML = `<td>${q}</td>
+                            <td class="${userAns === attempt.correctAnswers[i] ? 'correct':'incorrect'}">${userAns}</td>
+                            <td>${attempt.correctAnswers[i]}</td>`;
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        attemptDiv.appendChild(table);
+
+        historyContent.appendChild(attemptDiv);
+    });
+});
+</script>
+</body>
+</html>
