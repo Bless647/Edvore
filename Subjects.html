@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Subjects Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Subjects Page</title>
 <style>
     body {
         background-color: #121212;
@@ -25,10 +25,18 @@
         margin-right: auto;
     }
 
-    h1 { font-size: 2.5em; margin-bottom: 30px; }
-    h3 { font-size: 1.6em; margin: 20px 0; color: #fff; }
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
 
-    button.subject-btn {
+    h3 {
+        font-size: 1.6em;
+        margin: 20px 0;
+        color: #fff;
+    }
+
+    button {
         padding: 12px 30px;
         background: linear-gradient(145deg, #56ccf2, #2f80ed);
         color: white;
@@ -41,14 +49,26 @@
         transition: background-color 0.3s, transform 0.2s;
     }
 
-    button.subject-btn:hover {
+    button:hover {
         background: linear-gradient(145deg, #2f80ed, #56ccf2);
         transform: scale(1.1);
     }
 
-    /* Feedback & Records buttons */
-    .fixed-btn {
+    button:active {
+        transform: scale(1);
+    }
+
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 5px #56ccf2;
+    }
+
+    #feedback-button {
         position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #2f80ed;
+        color: white;
         padding: 12px 20px;
         border-radius: 50px;
         font-weight: bold;
@@ -56,75 +76,97 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
         z-index: 1000;
-        color: white;
-        border: none;
     }
 
-    #feedback-button {
-        bottom: 20px;
-        right: 20px;
-        background: #2f80ed;
+    #feedback-button:hover {
+        background: #56ccf2;
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
-    #feedback-button:hover { background: #56ccf2; transform: scale(1.1); }
-
-    #records-button {
-        bottom: 20px;
-        left: 20px;
-        background: #ff5722;
-    }
-
-    #records-button:hover { background: #ff7043; transform: scale(1.1); }
-
-    /* Modal styling */
-    .modal {
-        display: none;
+    #feedback-modal {
+        display: none; /* hidden by default */
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8);
-        justify-content: center; align-items: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
         z-index: 1001;
-        overflow-y: auto;
     }
 
-    .modal-content {
+    #feedback-content {
         background: #1a1a1a;
         padding: 30px;
         border-radius: 12px;
         width: 90%;
-        max-width: 600px;
+        max-width: 400px;
         color: white;
-        text-align: left;
-        max-height: 90vh;
-        overflow-y: auto;
+        text-align: center;
     }
 
-    .modal-content h3 { text-align: center; margin-bottom: 20px; }
-    .modal-content table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-    .modal-content th, .modal-content td {
-        border: 1px solid #555;
-        padding: 8px;
-        text-align: left;
+    #feedback-text {
+        width: 100%;
+        height: 100px;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        resize: none;
     }
-    .modal-content th { background: #333; }
-    .close-modal {
+
+    #send-feedback, #close-feedback {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #send-feedback {
+        background: #2f80ed;
+        color: white;
+    }
+
+    #send-feedback:hover {
+        background: #56ccf2;
+    }
+
+    #close-feedback {
         background: #555;
         color: white;
-        padding: 8px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
     }
 
-    .delete-btn {
-        background: #ff0000;
+    #close-feedback:hover {
+        background: #777;
+    }
+
+    nav ul {
+        list-style-type: none;
+        margin-top: 30px;
+        padding: 0;
+    }
+
+    nav ul li {
+        margin-top: 15px;
+        font-size: 1.2em;
+    }
+
+    nav ul li a {
         color: white;
-        padding: 4px 8px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 30px;
+        background: #333;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        background: #555;
     }
 </style>
 </head>
@@ -133,41 +175,23 @@
 <div class="menu-container">
     <h1>Choose a Subject</h1>
     <h3>Select one of the options below:</h3>
-
-    <button class="subject-btn" onclick="window.location.href='History.html'">History</button>
-    <button class="subject-btn" onclick="window.location.href='Geography.html'">Geography</button>
-    <button class="subject-btn" onclick="window.location.href='Maths.html'">Maths</button>
-    <button class="subject-btn" onclick="window.location.href='Natural Science.html'">Natural Science</button>
-    <button class="subject-btn" onclick="window.location.href='English.html'">English</button>
-
-    <nav>
-        <ul>
-            <li><a href="login.html">Back to Login</a></li>
-        </ul>
-    </nav>
+    <button onclick="window.location.href='User_History.html'">My Records</button>
+    <button onclick="window.location.href='History.html'">History</button>
+    <button onclick="window.location.href='Geography.html'">Geography</button>
+    <button onclick="window.location.href='Maths.html'">Maths</button>
+    <button onclick="window.location.href='Natural Science.html'">Natural Science</button>
+    <button onclick="window.location.href='English.html'">English</button>
 </div>
 
-<!-- Feedback & Records Buttons -->
-<button id="feedback-button" class="fixed-btn">💬 Send Feedback</button>
-<button id="records-button" class="fixed-btn">📋 My Records</button>
+<!-- Feedback Button -->
+<div id="feedback-button">💬 Send Feedback</div>
 
-<!-- Feedback Modal -->
-<div id="feedback-modal" class="modal">
-    <div class="modal-content">
+<div id="feedback-modal">
+    <div id="feedback-content">
         <h3>Send Feedback</h3>
-        <textarea id="feedback-text" style="width:100%; height:100px; border-radius:8px; border:none;"></textarea>
-        <br>
+        <textarea id="feedback-text" placeholder="Type your feedback here..."></textarea>
         <button id="send-feedback">Send</button>
-        <button id="close-feedback" class="close-modal">Cancel</button>
-    </div>
-</div>
-
-<!-- Records Modal -->
-<div id="records-modal" class="modal">
-    <div class="modal-content">
-        <h3>My Quiz Records</h3>
-        <div id="records-container"></div>
-        <button id="close-records" class="close-modal">Close</button>
+        <button id="close-feedback">Cancel</button>
     </div>
 </div>
 
@@ -176,7 +200,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-const firebaseConfig = {
+  // Firebase configuration
+  const firebaseConfig = {
     apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
     authDomain: "edvore-b11b7.firebaseapp.com",
     databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
@@ -184,101 +209,47 @@ const firebaseConfig = {
     storageBucket: "edvore-b11b7.appspot.com",
     messagingSenderId: "239809584061",
     appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+  };
 
-// Elements
-const feedbackButton = document.getElementById('feedback-button');
-const feedbackModal = document.getElementById('feedback-modal');
-const closeFeedback = document.getElementById('close-feedback');
-const sendFeedback = document.getElementById('send-feedback');
-const feedbackText = document.getElementById('feedback-text');
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
 
-const recordsButton = document.getElementById('records-button');
-const recordsModal = document.getElementById('records-modal');
-const closeRecords = document.getElementById('close-records');
-const recordsContainer = document.getElementById('records-container');
+  // Feedback functionality
+  const feedbackButton = document.getElementById('feedback-button');
+  const feedbackModal = document.getElementById('feedback-modal');
+  const closeFeedback = document.getElementById('close-feedback');
+  const sendFeedback = document.getElementById('send-feedback');
+  const feedbackText = document.getElementById('feedback-text');
 
-// Show feedback modal
-feedbackButton.addEventListener('click', () => { feedbackModal.style.display = 'flex'; });
-closeFeedback.addEventListener('click', () => { feedbackModal.style.display = 'none'; feedbackText.value=''; });
+  feedbackButton.addEventListener('click', () => {
+    feedbackModal.style.display = 'flex';
+  });
 
-// Send feedback to Firebase
-sendFeedback.addEventListener('click', () => {
+  closeFeedback.addEventListener('click', () => {
+    feedbackModal.style.display = 'none';
+    feedbackText.value = '';
+  });
+
+  sendFeedback.addEventListener('click', () => {
     const text = feedbackText.value.trim();
-    if(text!==""){
-        firebase.database().ref('feedbacks').push({
-            message: text,
-            timestamp: Date.now()
-        }).then(()=>{ alert("Feedback sent!"); feedbackModal.style.display='none'; feedbackText.value=''; })
-        .catch(err=>alert("Error sending feedback: "+err));
-    } else { alert("Enter feedback before sending."); }
-});
-
-// Show records modal
-recordsButton.addEventListener('click', () => {
-    const username = localStorage.getItem('username');
-    if(!username){
-        alert("No user logged in!");
-        return;
+    if(text !== "") {
+      const feedbackRef = database.ref('feedbacks');
+      feedbackRef.push({
+        message: text,
+        timestamp: Date.now()
+      }).then(() => {
+        alert("Feedback sent! Thank you.");
+        feedbackModal.style.display = 'none';
+        feedbackText.value = '';
+      }).catch(err => {
+        alert("Error sending feedback: " + err);
+      });
+    } else {
+      alert("Please enter feedback before sending.");
     }
-    recordsContainer.innerHTML = "<p>Loading records...</p>";
-    recordsModal.style.display = 'flex';
-
-    // Fetch all submissions
-    const subjects = ['English_Submissions','Geography_Submissions','Maths_Submissions','NaturalScience_Submissions','History_Submissions'];
-    let allRecords = [];
-    let fetchCount = 0;
-
-    subjects.forEach(subject=>{
-        firebase.database().ref(subject).once('value').then(snapshot=>{
-            const data = snapshot.val();
-            if(data){
-                for(const key in data){
-                    if(data[key].username === username){
-                        allRecords.push({...data[key], subject: subject.replace('_Submissions',''), key:key});
-                    }
-                }
-            }
-            fetchCount++;
-            if(fetchCount===subjects.length){
-                displayRecords(allRecords);
-            }
-        });
-    });
-});
-
-function displayRecords(records){
-    if(records.length===0){
-        recordsContainer.innerHTML = "<p>No records found.</p>";
-        return;
-    }
-    let html = "<table><tr><th>Subject</th><th>Score</th><th>Details</th><th>Time</th><th>Action</th></tr>";
-    records.forEach(record=>{
-        let date = new Date(record.timestamp);
-        html += `<tr>
-                    <td>${record.subject}</td>
-                    <td>${record.score || 'N/A'}</td>
-                    <td>${record.answers ? JSON.stringify(record.answers) : 'N/A'}</td>
-                    <td>${date.toLocaleString()}</td>
-                    <td><button class="delete-btn" onclick="deleteRecord('${record.subject}_Submissions','${record.key}')">Delete</button></td>
-                 </tr>`;
-    });
-    html += "</table>";
-    recordsContainer.innerHTML = html;
-}
-
-function deleteRecord(subject, key){
-    if(confirm("Are you sure you want to delete this record?")){
-        firebase.database().ref(subject+'/'+key).remove().then(()=>{ alert("Record deleted."); recordsContainer.innerHTML=''; recordsButton.click(); });
-    }
-}
-
-// Close records modal
-closeRecords.addEventListener('click', ()=>{ recordsModal.style.display='none'; });
-
+  });
 </script>
 
 </body>
-    </html>
+                                                                                  </html>
