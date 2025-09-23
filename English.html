@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Quiz</title>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -37,7 +37,9 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
             authDomain: "edvore-b11b7.firebaseapp.com",
@@ -49,9 +51,8 @@
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-    </script>
 
-    <script>
+        // Quiz logic
         let index = 0;
         const quest = document.getElementById("question");
         const progress = document.getElementById("progress");
@@ -59,6 +60,7 @@
         const backBtn = document.getElementById("back");
         const submitBtn = document.getElementById("submit");
         const userAnswers = [];
+        const username = localStorage.getItem("username") || "Anonymous";
 
         const questions = [
             { quest: "1. What is a verb?", a: "It describes a noun", b: "Is a doing word", c: "It describes a verb", correct: "b" },
@@ -80,9 +82,13 @@
             document.getElementById("c").innerHTML = "C) " + questions[index].c;
             progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
             backBtn.style.display = "inline-block";
+            answersList.style.pointerEvents = "auto"; 
+            answersList.style.display = "block";
+            submitBtn.style.display = "none";
         }
 
         function chooseAnswer(answer) {
+            answersList.style.pointerEvents = "none"; 
             userAnswers[index] = answer;
             showFeedback(answer === questions[index].correct ? "Correct!" : "Incorrect!", answer === questions[index].correct);
             index++;
@@ -94,7 +100,7 @@
         }
 
         function showFeedback(message, isCorrect) {
-            let feedback = document.createElement("div");
+            const feedback = document.createElement("div");
             feedback.innerHTML = message;
             feedback.classList.add("feedback");
             feedback.style.backgroundColor = isCorrect ? "green" : "red";
@@ -116,9 +122,9 @@
 
         function submitQuiz() {
             const submissionRef = database.ref('English_Submissions/' + Date.now());
-            submissionRef.set({ answers: userAnswers })
+            submissionRef.set({ username: username, answers: userAnswers })
             .then(() => {
-                // Redirect to Subjects page after successful submission
+                alert("Quiz submitted successfully!");
                 window.location.href = "Subjects.html";
             })
             .catch((error) => { alert("Error submitting quiz: " + error); });
@@ -128,4 +134,4 @@
     </script>
 </div>
 </body>
-   </html>
+</html>
