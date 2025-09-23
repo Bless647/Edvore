@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>English Quiz</title>
+<title>Geography Quiz</title>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: Arial, sans-serif; background-color:#121212; color:#E0E0E0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
-    .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:600px; }
+    .menu-container { background-color:black; padding:30px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.3); text-align:center; width:100%; max-width:700px; }
     h1 { font-size:2.5em; color:#fff; }
-    h3 { font-size:1.6em; color:#dcdcdc; margin-bottom:20px; }
+    h3 { font-size:1.4em; color:#dcdcdc; margin-bottom:20px; }
     .no-bullets { list-style:none; padding:0; margin:20px 0; }
     .no-bullets li { margin:10px 0; font-size:1.2em; padding:10px; background-color:#333; border-radius:5px; cursor:pointer; transition:0.3s; }
     .no-bullets li:hover { background-color:#555; }
@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="menu-container">
-    <h1>English Quiz</h1>
+    <h1>Geography Quiz</h1>
     <h3 id="question"></h3> 
     <ul class="no-bullets" id="answers-list">
         <li id="a" onclick="chooseAnswer('a')"></li>
@@ -64,17 +64,28 @@
         // Get username from login
         const username = localStorage.getItem("username") || "Anonymous";
 
+        // 20 Grade 8 Geography questions
         const questions = [
-            { quest: "1. Identify the noun in this sentence: 'The cat sleeps on the mat.'", a: "cat", b: "sleeps", c: "on", correct: "a" },
-            { quest: "2. Choose the correct form: 'She _____ to school every day.'", a: "go", b: "goes", c: "gone", correct: "b" },
-            { quest: "3. Pick the synonym for 'angry'.", a: "mad", b: "happy", c: "sad", correct: "a" },
-            { quest: "4. What is the plural of 'child'?", a: "childs", b: "children", c: "childes", correct: "b" },
-            { quest: "5. Select the adjective: 'The tall man walked quickly.'", a: "tall", b: "walked", c: "quickly", correct: "a" },
-            { quest: "6. Fill in the blank: 'I have _____ apples.'", a: "much", b: "many", c: "more", correct: "b" },
-            { quest: "7. What is the opposite of 'difficult'?", a: "easy", b: "hard", c: "tough", correct: "a" },
-            { quest: "8. Choose the correct past tense: 'They _____ a movie yesterday.'", a: "watch", b: "watched", c: "watches", correct: "b" },
-            { quest: "9. Identify the adverb: 'She sings beautifully.'", a: "sings", b: "beautifully", c: "she", correct: "b" },
-            { quest: "10. Pick the correct word: 'Its/It's a sunny day.'", a: "Its", b: "It's", c: "It", correct: "b" }
+            { quest: "1. What is the Earth's largest continent?", a: "Africa", b: "Asia", c: "Europe", correct: "b" },
+            { quest: "2. Which is the longest river in the world?", a: "Nile", b: "Amazon", c: "Yangtze", correct: "a" },
+            { quest: "3. What is the capital of South Africa?", a: "Pretoria", b: "Johannesburg", c: "Cape Town", correct: "a" },
+            { quest: "4. Which layer of the Earth is liquid?", a: "Mantle", b: "Outer Core", c: "Crust", correct: "b" },
+            { quest: "5. What is the term for land surrounded by water on three sides?", a: "Peninsula", b: "Island", c: "Isthmus", correct: "a" },
+            { quest: "6. Which ocean is the deepest?", a: "Atlantic", b: "Pacific", c: "Indian", correct: "b" },
+            { quest: "7. What is the process by which rocks break down over time?", a: "Erosion", b: "Weathering", c: "Deposition", correct: "b" },
+            { quest: "8. What is the capital city of Egypt?", a: "Cairo", b: "Alexandria", c: "Giza", correct: "a" },
+            { quest: "9. Which continent is known as the 'Dark Continent'?", a: "Africa", b: "Asia", c: "South America", correct: "a" },
+            { quest: "10. What is the equator?", a: "A line dividing North and South Hemispheres", b: "A river in Africa", c: "A mountain range", correct: "a" },
+            { quest: "11. What is the tallest mountain in the world?", a: "K2", b: "Everest", c: "Kilimanjaro", correct: "b" },
+            { quest: "12. Which country has the largest population?", a: "India", b: "USA", c: "China", correct: "c" },
+            { quest: "13. What is the primary cause of seasons?", a: "Earth's tilt", b: "Earth's rotation", c: "Moon's orbit", correct: "a" },
+            { quest: "14. Which is the smallest continent?", a: "Australia", b: "Europe", c: "Antarctica", correct: "a" },
+            { quest: "15. What is the name of the imaginary line at 0° longitude?", a: "Prime Meridian", b: "International Date Line", c: "Equator", correct: "a" },
+            { quest: "16. Which country is known as the Land of the Rising Sun?", a: "China", b: "Japan", c: "Thailand", correct: "b" },
+            { quest: "17. Which river flows through London?", a: "Seine", b: "Thames", c: "Danube", correct: "b" },
+            { quest: "18. What is the term for a group of islands?", a: "Archipelago", b: "Isthmus", c: "Peninsula", correct: "a" },
+            { quest: "19. What is the Sahara?", a: "Forest", b: "Desert", c: "Mountain", correct: "b" },
+            { quest: "20. Which continent has the most countries?", a: "Africa", b: "Europe", c: "Asia", correct: "a" }
         ];
 
         function initQuest() {
@@ -123,7 +134,7 @@
         }
 
         function submitQuiz() {
-            const submissionRef = database.ref('English_Submissions/' + Date.now());
+            const submissionRef = database.ref('Geography_Submissions/' + Date.now());
             submissionRef.set({
                 username: username,
                 answers: userAnswers
@@ -139,4 +150,4 @@
     </script>
 </div>
 </body>
-</html>
+       </html>
