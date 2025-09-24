@@ -24,7 +24,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
     authDomain: "edvore-b11b7.firebaseapp.com",
@@ -37,29 +36,33 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// Login button click
 document.getElementById("loginBtn").addEventListener("click", () => {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (!username || !password) {
-        alert("Enter username and password.");
-        return;
+    if (!username || !password) { 
+        alert("Enter username and password."); 
+        return; 
     }
 
-    // Fetch user from Firebase
-    database.ref('users_control/' + username).once('value').then(snapshot => {
+    database.ref('Users/' + username).once('value').then(snapshot => {
         const user = snapshot.val();
 
-        if (!user) {
-            alert("Invalid username or password.");
-            return;
+        if (!user) { 
+            alert("Invalid username or password."); 
+            return; 
         }
 
-        // Check password
+        // BLOCK LOGIN IF TOGGLE IS OFF
+        if (!user.paid) {
+            alert("You haven’t paid yet. Please contact the admin.");
+            return; // stay on login page, no redirect
+        }
+
+        // LOGIN IF TOGGLE IS ON
         if (user.password === password) {
             localStorage.setItem("username", username);
-            window.location.href = "subjects.html"; // redirect
+            window.location.href = "subjects.html"; // only redirect if toggle is ON
         } else {
             alert("Invalid username or password.");
         }
