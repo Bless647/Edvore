@@ -2,90 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subjects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>User History</title>
   <style>
     body {
       background-color: #121212;
-      color: white;
       font-family: Arial, sans-serif;
+      color: white;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      max-width: 800px;
+      margin: 50px auto;
       padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
-    .subject-box {
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+    }
+
+    .history-list {
+      margin-top: 20px;
+    }
+
+    .history-item {
       background: #1e1e1e;
-      border-radius: 10px;
-      width: 200px;
-      height: 120px;
-      margin: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5em;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border-left: 5px solid #2f80ed;
     }
 
-    .subject-box:hover {
+    .history-item strong {
+      color: #56ccf2;
+    }
+
+    /* Delete button */
+    .delete-btn {
+      background: #e63946;
+      border: none;
+      padding: 8px 14px;
+      color: white;
+      font-size: 0.9em;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      float: right;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .delete-btn:hover {
+      background: #ff4f5e;
       transform: scale(1.05);
     }
 
-    /* Feedback button (bottom-right) */
-    .feedback-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #56ccf2;
-      color: #121212;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1em;
-      font-weight: bold;
-    }
-
-    .feedback-btn:hover {
-      background: #2d9cdb;
-    }
-
-    /* My Records button (bottom-left) */
-    .records-btn {
+    /* Back button (bottom-left) */
+    #back-button {
       position: fixed;
       bottom: 20px;
       left: 20px;
-      background: #27ae60;
+      background: #2f80ed;
       color: white;
       padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1em;
+      border-radius: 50px;
       font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
     }
 
-    .records-btn:hover {
-      background: #1e874b;
+    #back-button:hover {
+      background: #56ccf2;
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
+
   </style>
 </head>
 <body>
+
   <div class="container">
-    <div class="subject-box" onclick="location.href='Maths.html'">Maths</div>
-    <div class="subject-box" onclick="location.href='English.html'">English</div>
-    <div class="subject-box" onclick="location.href='History.html'">History</div>
+    <h1>📝 Your Quiz Records</h1>
+    <div class="history-list" id="history-list">
+      <!-- Records will be loaded here -->
+    </div>
   </div>
 
-  <!-- My Records (bottom-left) -->
-  <a href="User History.html" class="records-btn">📁 My Records</a>
+  <!-- Back button -->
+  <a id="back-button" href="Subjects.html">⬅ Back</a>
 
-  <!-- Feedback (bottom-right) -->
-  <a href="Feedback.html" class="feedback-btn">💬 Send Feedback</a>
+  <script>
+    // Load history from localStorage
+    function loadHistory() {
+      const historyList = document.getElementById("history-list");
+      historyList.innerHTML = "";
+
+      const records = JSON.parse(localStorage.getItem("quizHistory")) || [];
+
+      if (records.length === 0) {
+        historyList.innerHTML = "<p>No records found.</p>";
+        return;
+      }
+
+      records.forEach((record, index) => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerHTML = `
+          <strong>Subject:</strong> ${record.subject} <br>
+          <strong>Score:</strong> ${record.score} <br>
+          <strong>Date:</strong> ${record.date}
+          <button class="delete-btn" onclick="deleteRecord(${index})">Delete</button>
+        `;
+        historyList.appendChild(div);
+      });
+    }
+
+    // Delete a single record
+    function deleteRecord(index) {
+      let records = JSON.parse(localStorage.getItem("quizHistory")) || [];
+      records.splice(index, 1);
+      localStorage.setItem("quizHistory", JSON.stringify(records));
+      loadHistory();
+    }
+
+    // Load history when page opens
+    loadHistory();
+  </script>
+
 </body>
-</html>
+  </html>
