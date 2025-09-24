@@ -56,16 +56,19 @@ document.getElementById("loginBtn").addEventListener("click", () => {
             return;
         }
 
-        // BLOCK if toggle is off
+        // === THIS IS THE ONLY CHANGE ===
+        // BLOCK user if toggle is OFF
         if (user.active === false) {
             alert("You haven’t paid yet. Please contact the admin.");
             return; // stay on login page
         }
 
-        // Check password
+        // === Everything else remains exactly as it was ===
+        // Normal login (assuming existing login logic handles password)
+        // For simplicity, if you already have password logic, leave it here
         if (user.password === password) {
             localStorage.setItem("username", username);
-            window.location.href = "subjects.html"; // redirect if toggle is on
+            window.location.href = "subjects.html";
         } else {
             alert("Invalid username or password.");
         }
