@@ -62,7 +62,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
         authDomain: "edvore-b11b7.firebaseapp.com",
@@ -86,26 +85,30 @@
             return;
         }
 
-        // Check if user has paid (toggle ON)
-        database.ref('Users/' + username + '/paid').once('value').then(snapshot => {
-            const hasPaid = snapshot.val();
-            if (!hasPaid) {
-                alert("You haven’t paid yet. Please contact us.");
-                return; // Stop login, stay on page
+        // First, get user data
+        database.ref('Users/' + username).once('value').then(userSnap => {
+            const userData = userSnap.val();
+
+            if (!userData) {
+                alert("Invalid username or password.");
+                return;
             }
 
-            // Proceed with login
-            database.ref('Users/' + username).once('value').then(userSnap => {
-                const userData = userSnap.val();
-                if (userData && userData.password === password) {
-                    localStorage.setItem("username", username);
-                    window.location.href = "subjects.html"; // redirect only if paid
-                } else {
-                    alert("Invalid username or password.");
-                }
-            });
+            // Check if paid toggle is ON
+            if (!userData.paid) {
+                alert("You haven’t paid yet. Please contact the admin.");
+                return; // stop login, user cannot access anything
+            }
+
+            // Check password only if paid
+            if (userData.password === password) {
+                localStorage.setItem("username", username);
+                window.location.href = "subjects.html"; // redirect only if paid
+            } else {
+                alert("Invalid username or password.");
+            }
         });
     });
 </script>
 </body>
-</html>
+                                   </html>
