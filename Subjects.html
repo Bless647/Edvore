@@ -13,126 +13,90 @@
       padding: 0;
     }
 
-    .menu-container {
-      text-align: center;
-      padding: 40px;
-      margin-top: 50px;
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .subject-box {
       background: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
-      width: 80%;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 30px;
-    }
-
-    h3 {
-      font-size: 1.6em;
-      margin: 20px 0;
-      color: #fff;
-    }
-
-    button {
-      padding: 12px 30px;
-      background: linear-gradient(145deg, #56ccf2, #2f80ed);
-      color: white;
-      font-size: 1.2em;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      border-radius: 12px;
       cursor: pointer;
-      margin: 10px;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
-    button:hover {
-      background: linear-gradient(145deg, #2f80ed, #56ccf2);
-      transform: scale(1.1);
+    .subject-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
     }
 
-    button:active {
-      transform: scale(1);
+    .subject-box h2 {
+      margin: 0;
+      font-size: 1.5em;
+      color: #56ccf2;
     }
 
-    button:focus {
-      outline: none;
-      box-shadow: 0 0 5px #56ccf2;
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin-top: 30px;
-      padding: 0;
-    }
-
-    nav ul li {
-      margin-top: 15px;
-      font-size: 1.2em;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 10px 30px;
-      background: #333;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    nav ul li a:hover {
-      background: #555;
-    }
-
-    /* My Records button (bottom-left floating) */
-    #records-button {
+    /* Floating buttons */
+    .floating-btn {
       position: fixed;
-      bottom: 20px;
       left: 20px;
       background: #2f80ed;
       color: white;
       padding: 12px 20px;
       border-radius: 50px;
       font-weight: bold;
+      text-decoration: none;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
-      z-index: 1000;
     }
 
-    #records-button:hover {
+    .floating-btn:hover {
       background: #56ccf2;
       transform: scale(1.1);
       box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Positioning */
+    #feedback-btn {
+      bottom: 80px; /* Higher */
+    }
+
+    #records-btn {
+      bottom: 20px; /* Lower */
     }
   </style>
 </head>
 <body>
 
-<div class="menu-container">
-  <h1>Choose a Subject</h1>
-  <h3>Select one of the options below:</h3>
+  <div class="container">
+    <div class="subject-box" onclick="location.href='English.html'">
+      <h2>English</h2>
+    </div>
+    <div class="subject-box" onclick="location.href='Geography.html'">
+      <h2>Geography</h2>
+    </div>
+    <div class="subject-box" onclick="location.href='NaturalScience.html'">
+      <h2>Natural Science</h2>
+    </div>
+    <div class="subject-box" onclick="location.href='Maths.html'">
+      <h2>Maths</h2>
+    </div>
+    <div class="subject-box" onclick="location.href='History.html'">
+      <h2>History</h2>
+    </div>
+  </div>
 
-  <button onclick="window.location.href='History.html'">History</button>
-  <button onclick="window.location.href='Geography.html'">Geography</button>
-  <button onclick="window.location.href='Maths.html'">Maths</button>
-  <button onclick="window.location.href='Natural Science.html'">Natural Science</button>
-  <button onclick="window.location.href='English.html'">English</button>
-
-  <nav>
-    <ul>
-      <li><a href="login.html">Back</a></li>
-    </ul>
-  </nav>
-</div>
-
-<!-- My Records button -->
-<a id="records-button" href="User.html">📖 My Records</a>
+  <!-- Floating Buttons -->
+  <a id="feedback-btn" class="floating-btn" href="Feedback.html">💬 Send Feedback</a>
+  <a id="records-btn" class="floating-btn" href="User History.html">📖 My Records</a>
 
 </body>
-  </html>
-
+</html>
