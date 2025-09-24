@@ -2,58 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subjects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Choose a Subject</title>
   <style>
     body {
       background-color: #121212;
-      color: white;
       font-family: Arial, sans-serif;
+      color: white;
       margin: 0;
       padding: 0;
-    }
-
-    .container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 20px;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .subject-box {
-      background: #1e1e1e;
+    .menu-container {
+      text-align: center;
+      padding: 40px;
+      margin-top: 50px;
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
-      width: 200px;
-      height: 120px;
-      margin: 15px;
+      width: 90%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 1.5em;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+      gap: 15px; /* spacing between buttons */
     }
 
-    .subject-box:hover {
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.6em;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    button {
+      width: 80%; /* make all buttons same width */
+      max-width: 300px;
+      padding: 12px 30px;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      color: white;
+      font-size: 1.2em;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #2f80ed, #56ccf2);
       transform: scale(1.05);
     }
 
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 5px #56ccf2;
+    }
+
     /* Feedback button (bottom-right) */
-    .feedback-btn {
+    #feedback-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: #56ccf2;
-      color: #121212;
+      background: #2f80ed;
+      color: white;
       padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1em;
+      border-radius: 50px;
       font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+      z-index: 1000;
     }
 
-    .feedback-btn:hover {
-      background: #2d9cdb;
+    #feedback-button:hover {
+      background: #56ccf2;
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
     /* My Records button (bottom-left) */
@@ -64,30 +97,42 @@
       background: #27ae60;
       color: white;
       padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1em;
+      border-radius: 50px;
       font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+      z-index: 1000;
     }
 
     .records-btn:hover {
-      background: #1e874b;
+      background: #2ecc71;
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="subject-box" onclick="location.href='Maths.html'">Maths</div>
-    <div class="subject-box" onclick="location.href='English.html'">English</div>
-    <div class="subject-box" onclick="location.href='History.html'">History</div>
+
+  <div class="menu-container">
+    <h1>Choose a Subject</h1>
+    <h3>Select one of the options below:</h3>
+
+    <button onclick="window.location.href='History.html'">History</button>
+    <button onclick="window.location.href='Geography.html'">Geography</button>
+    <button onclick="window.location.href='Maths.html'">Maths</button>
+    <button onclick="window.location.href='Natural-Science.html'">Natural Science</button>
+    <button onclick="window.location.href='English.html'">English</button>
+
+    <button onclick="window.location.href='login.html'">Back</button>
   </div>
 
-  <!-- My Records (bottom-left) -->
-  <a href="User History.html" class="records-btn">📁 My Records</a>
+  <!-- Feedback Button -->
+  <div id="feedback-button">💬 Send Feedback</div>
 
-  <!-- Feedback (bottom-right) -->
-  <a href="Feedback.html" class="feedback-btn">💬 Send Feedback</a>
+  <!-- My Records Button -->
+  <a href="User-History.html" class="records-btn">📁 My Records</a>
+
 </body>
 </html>
-                                                                                  </html>
-
