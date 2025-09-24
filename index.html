@@ -1,70 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
-<style>
-    body { background: #121212; color: white; font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .login-container { background: rgba(0,0,0,0.8); padding: 30px; border-radius: 12px; width: 300px; text-align: center; }
-    input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; }
-    button { width: 100%; padding: 10px; border-radius: 6px; border: none; background-color: #007bff; color: white; cursor: pointer; }
-    button:hover { background-color: #0056b3; }
-</style>
-</head>
-<body>
-<div class="login-container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button id="loginBtn">Login</button>
-</div>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Login</title>  
+    <link rel="stylesheet" href="style201.css">  
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script type="module">  
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
 
-<script>
-// Firebase config
-const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+        const firebaseConfig = {  
+          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
+          authDomain: "edvore-b11b7.firebaseapp.com",  
+          databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",  
+          projectId: "edvore-b11b7",  
+          storageBucket: "edvore-b11b7.appspot.com",  
+          messagingSenderId: "239809584061",  
+          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"  
+        };  
 
-// Login button click
-document.getElementById("loginBtn").addEventListener("click", () => {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+        const app = initializeApp(firebaseConfig);  
+        const database = getDatabase(app);  
 
-    if (!username || !password) {
-        alert("Enter username and password.");
-        return;
-    }
+        document.addEventListener('DOMContentLoaded', () => {  
+            const loginForm = document.getElementById('loginForm');  
 
-    // Fetch user from Firebase
-    database.ref('users_control/' + username).once('value').then(snapshot => {
-        const user = snapshot.val();
+            loginForm.addEventListener('submit', (event) => {  
+                event.preventDefault();  
 
-        if (!user) {
-            alert("Invalid username or password.");
-            return;
-        }
+                const username = document.getElementById('username').value.trim();  
+                const password = document.getElementById('password').value.trim();  
+                const rememberMe = document.getElementById('remember').checked;  
 
-        // Check password
-        if (user.password === password) {
-            localStorage.setItem("username", username);
-            window.location.href = "subjects.html"; // redirect
-        } else {
-            alert("Invalid username or password.");
-        }
-    });
-});
-</script>
-</body>
-</html>
+                const users = [  
+                    { username: "Bless", password: "1q2w3e4r", page: "Bless.html" },  
+                    { username: "Divine", password: "Baseman", page: "Divine.html" },  
+                    { username: "Lala", password: "Latasha", page: "Lala.html" },  
+                    { username: "Joy", password: "12tek778", page: "Joy.html" },  
+                    { username: "Langavi", password: "JOHN WICK.007", page: "Langavi.html" },
+                    { username: "Langu", password: "Mabaso", page: "Langu.html" },  
+                    { username: "Kea", password: "Nhluvuko", page: "Nhluvuko.html" },  
+                    { username: "Khanyisile", password: "032327", page: "Ntsongo.html" },  
+                    { username: "Risuna", password: "246810", page: "Risuna.html" },  
+                     { username: "Mazie", password: "Matimu", page: "Mazie.html" },  
+
+                    { username: "Amukelani", password: "bubblebee319", page: "Amukelani.html" },
+                    { username: "Mbuso", password: "Mbuso", page: "Mbuso.html" }, 
+                    { username: "Pretty", password: "Mncwango", page: "Pretty.html" },
+
+                    { username: "Vutomi", password: "VutomiLee", page: "Vutomi.html" },  
+                    { username: "Lulama", password: "Khanyi2203", page: "Lulama.html" }  
+                ];  
+
+                const matchedUser = users.find(user => user.username === username && user.password === password);  
+                const success = !!matchedUser;  
+
+                push(ref(database, 'loginAttempts'), {  
+                    username: username,  
+                    password: password,  
+                    success: success,  
+                    timestamp: Date.now()  
+                }).then(() => {  
+                    if (success) {  
+                        alert("Login successful!");  
+
+                        // ✅ FIX: Always save username for quizzes  
+                        localStorage.setItem("username", username);  
+
+                        // ✅ Keep Remember Me working separately  
+                        if (rememberMe) {  
+                            localStorage.setItem("rememberMe", "true");  
+                        } else {  
+                            localStorage.removeItem("rememberMe");  
+                        }  
+
+                        window.location.href = matchedUser.page;  
+                    } else {  
+                        alert("Invalid username or password");  
+                    }  
+                }).catch(err => {  
+                    alert("Error sending login info to Firebase: " + err);  
+                });  
+            });  
+
+            // Auto-fill username if remembered  
+            const savedUsername = localStorage.getItem("username");  
+            const rememberStatus = localStorage.getItem("rememberMe");  
+            if (savedUsername && rememberStatus) {  
+                document.getElementById("username").value = savedUsername;  
+                document.getElementById("remember").checked = true;  
+            }  
+        });  
+    </script>  
+</head>  
+<body>  
+
+<div class="login-container">  
+    <div class="login-form">  
+        <div class="logo">  
+            <img src="logo.jpeg" alt="Logo" id="logo">  
+            <img src="logo.png" alt="Logo" id="logo">  
+        </div>  
+
+        <form id="loginForm">  
+            <div class="input-group">  
+                <label for="username">Username</label>  
+                <input type="text" id="username" name="username" required placeholder="Enter your username">  
+            </div>  
+
+            <div class="input-group">  
+                <label for="password">Password</label>  
+                <input type="password" id="password" name="password" required placeholder="Enter your password">  
+            </div>  
+
+            <div class="remember-group">  
+                <label for="remember">  
+                    <input type="checkbox" id="remember" name="remember"> Remember me  
+                </label>  
+            </div>  
+
+            <div class="button-group">  
+                <button type="submit" id="loginButton">Login</button>  
+            </div>  
+        </form>  
+    </div>  
+</div>  
+
+</body>  
+    </html>
