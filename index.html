@@ -8,7 +8,7 @@
 
     <script type="module">  
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
+        import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
 
         const firebaseConfig = {  
           apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
@@ -26,62 +26,58 @@
         document.addEventListener('DOMContentLoaded', () => {  
             const loginForm = document.getElementById('loginForm');  
 
-            loginForm.addEventListener('submit', (event) => {  
+            loginForm.addEventListener('submit', async (event) => {  
                 event.preventDefault();  
 
                 const username = document.getElementById('username').value.trim();  
                 const password = document.getElementById('password').value.trim();  
                 const rememberMe = document.getElementById('remember').checked;  
 
-                const users = [  
-                    { username: "Bless", password: "1q2w3e4r", page: "Bless.html" },  
-                    { username: "Divine", password: "Baseman", page: "Divine.html" },  
-                    { username: "Lala", password: "Latasha", page: "Lala.html" },  
-                    { username: "Joy", password: "12tek778", page: "Joy.html" },  
-                    { username: "Langavi", password: "JOHN WICK.007", page: "Langavi.html" },
-                    { username: "Langu", password: "Mabaso", page: "Langu.html" },  
-                    { username: "Kea", password: "Nhluvuko", page: "Nhluvuko.html" },  
-                    { username: "Khanyisile", password: "032327", page: "Ntsongo.html" },  
-                    { username: "Risuna", password: "246810", page: "Risuna.html" },  
-                     { username: "Mazie", password: "Matimu", page: "Mazie.html" },  
+                if (!username || !password) {
+                    alert("Enter username and password.");
+                    return;
+                }
 
-                    { username: "Amukelani", password: "bubblebee319", page: "Amukelani.html" },
-                    { username: "Mbuso", password: "Mbuso", page: "Mbuso.html" }, 
-                    { username: "Pretty", password: "Mncwango", page: "Pretty.html" },
+                try {
+                    const snapshot = await get(child(ref(database), 'users_control/' + username));
+                    const user = snapshot.val();
 
-                    { username: "Vutomi", password: "VutomiLee", page: "Vutomi.html" },  
-                    { username: "Lulama", password: "Khanyi2203", page: "Lulama.html" }  
-                ];  
+                    if (!user) {
+                        alert("Invalid username or password");
+                        return;
+                    }
 
-                const matchedUser = users.find(user => user.username === username && user.password === password);  
-                const success = !!matchedUser;  
+                    // Check toggle: if user is not active and not Bless, block login
+                    if (user.active === false && username !== "Bless") {
+                        alert("You haven’t paid yet. Please contact the admin.");
+                        return; // stay on login page
+                    }
 
-                push(ref(database, 'loginAttempts'), {  
-                    username: username,  
-                    password: password,  
-                    success: success,  
-                    timestamp: Date.now()  
-                }).then(() => {  
-                    if (success) {  
-                        alert("Login successful!");  
+                    // Check password
+                    if (user.password === password) {
+                        localStorage.setItem("username", username);
+                        if (rememberMe) {
+                            localStorage.setItem("rememberMe", "true");
+                        } else {
+                            localStorage.removeItem("rememberMe");
+                        }
 
-                        // ✅ FIX: Always save username for quizzes  
-                        localStorage.setItem("username", username);  
+                        // Redirect to user's page
+                        window.location.href = user.username + ".html";
+                    } else {
+                        alert("Invalid username or password");
+                    }
 
-                        // ✅ Keep Remember Me working separately  
-                        if (rememberMe) {  
-                            localStorage.setItem("rememberMe", "true");  
-                        } else {  
-                            localStorage.removeItem("rememberMe");  
-                        }  
+                    // Log the attempt
+                    await push(ref(database, 'loginAttempts'), {  
+                        username: username,  
+                        success: user.password === password,  
+                        timestamp: Date.now()  
+                    });
 
-                        window.location.href = matchedUser.page;  
-                    } else {  
-                        alert("Invalid username or password");  
-                    }  
-                }).catch(err => {  
-                    alert("Error sending login info to Firebase: " + err);  
-                });  
+                } catch (err) {
+                    alert("Error accessing Firebase: " + err);
+                }
             });  
 
             // Auto-fill username if remembered  
