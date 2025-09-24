@@ -1,176 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Subjects</title>
   <style>
-    :root{
-      --accent1:#56ccf2;
-      --accent2:#2f80ed;
-      --box-bg: rgba(0,0,0,0.7);
-      --box-border: rgba(255,255,255,0.08);
-      --white: #ffffff;
-    }
-
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-color:#121212;
-      color:var(--white);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      background-color: #121212;
+      color: white;
     }
 
-    .page-wrap{
-      max-width:980px;
-      margin:48px auto;
-      padding:24px;
+    .menu-container {
+      text-align: center;
+      padding: 40px;
+      margin-top: 40px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    h1{
-      text-align:center;
-      margin:0 0 18px;
-      font-size:2.2rem;
-      color:var(--white);
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
     }
 
-    .grid {
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap:20px;
-      margin-top:18px;
-    }
-
-    .subject-box{
-      background:var(--box-bg);
-      border-radius:12px;
-      padding:26px 18px;
-      text-align:center;
-      cursor:pointer;
-      border:1px solid var(--box-border);
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:110px;
-    }
-
-    .subject-box:hover{
-      transform:translateY(-6px) scale(1.02);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 2px 8px rgba(47,128,237,0.08);
-      background: linear-gradient(135deg, rgba(47,128,237,0.06), rgba(86,204,242,0.02));
-    }
-
-    .subject-title{
-      font-size:1.25rem;
-      font-weight:700;
-      color:var(--white); /* IMPORTANT: keep white */
-      letter-spacing:0.2px;
-      margin:0;
-    }
-
-    /* Original-style action buttons (not subject boxes) kept similar to what you had */
-    .action-row{
-      text-align:center;
-      margin-top:26px;
-    }
-
-    .btn-classic{
-      display:inline-block;
-      padding:12px 28px;
-      margin:8px;
-      border-radius:8px;
-      background: linear-gradient(145deg,var(--accent1),var(--accent2));
-      color:var(--white);
-      font-weight:700;
-      text-decoration:none;
-      transition: transform .15s ease, box-shadow .15s ease;
+    .subject-btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      color: white;
+      font-size: 1.2em;
+      font-weight: bold;
       border: none;
-      cursor:pointer;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .btn-classic:hover{
-      transform:scale(1.05);
-      box-shadow: 0 8px 20px rgba(47,128,237,0.12);
+    .subject-btn:hover {
+      transform: scale(1.05);
     }
 
     /* Floating buttons */
-    .floating-btn{
-      position:fixed;
-      bottom:20px;
-      padding:12px 18px;
-      border-radius:999px;
-      font-weight:700;
-      color:var(--white);
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      box-shadow:0 6px 22px rgba(0,0,0,0.45);
-      text-decoration:none;
-      z-index:1200;
+    .floating-btn {
+      position: fixed;
+      bottom: 20px;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      color: white;
+      text-decoration: none;
       border: none;
-      cursor:pointer;
     }
 
-    #records-btn{
-      left:20px;
-      background: linear-gradient(145deg,#2f80ed,#56ccf2);
+    .floating-btn:hover {
+      transform: scale(1.1);
     }
 
-    #feedback-btn{
-      right:20px;
-      background: linear-gradient(145deg,#2f80ed,#56ccf2);
+    #records-btn {
+      left: 20px;
     }
 
-    .floating-btn:hover{ transform:translateY(-4px) scale(1.03); }
-
-    /* Responsive tweaks so buttons don't cover content on small screens */
-    @media (max-width:540px){
-      .page-wrap{ margin:20px 14px; padding:16px; }
-      .subject-box{ padding:18px; min-height:96px; }
-      .floating-btn{ padding:10px 14px; font-size:0.95rem; }
+    #feedback-button {
+      right: 20px;
     }
 
+    /* Feedback modal */
+    #feedback-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+
+    #feedback-content {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      color: white;
+      text-align: center;
+    }
+
+    #feedback-text {
+      width: 100%;
+      height: 100px;
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      resize: none;
+    }
+
+    #send-feedback, #close-feedback {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #send-feedback {
+      background: #2f80ed;
+      color: white;
+    }
+
+    #send-feedback:hover { background: #56ccf2; }
+    #close-feedback { background: #555; color: white; }
+    #close-feedback:hover { background: #777; }
   </style>
 </head>
 <body>
-  <div class="page-wrap">
-    <h1>Choose a Subject</h1>
 
-    <div class="grid">
-      <div class="subject-box" onclick="location.href='English.html'">
-        <p class="subject-title">English</p>
-      </div>
+<div class="menu-container">
+  <h1>Choose a Subject</h1>
+  <button class="subject-btn" onclick="location.href='English.html'">English</button>
+  <button class="subject-btn" onclick="location.href='Geography.html'">Geography</button>
+  <button class="subject-btn" onclick="location.href='Maths.html'">Maths</button>
+  <button class="subject-btn" onclick="location.href='Natural Science.html'">Natural Science</button>
+  <button class="subject-btn" onclick="location.href='History.html'">History</button>
+</div>
 
-      <div class="subject-box" onclick="location.href='Geography.html'">
-        <p class="subject-title">Geography</p>
-      </div>
+<!-- Floating buttons -->
+<a id="records-btn" class="floating-btn" href="User.html">📖 My Records</a>
+<button id="feedback-button" class="floating-btn">💬 Send Feedback</button>
 
-      <div class="subject-box" onclick="location.href='Maths.html'">
-        <p class="subject-title">Maths</p>
-      </div>
-
-      <div class="subject-box" onclick="location.href='Natural Science.html'">
-        <p class="subject-title">Natural Science</p>
-      </div>
-
-      <div class="subject-box" onclick="location.href='History.html'">
-        <p class="subject-title">History</p>
-      </div>
-    </div>
-
-    <div class="action-row" style="margin-top:30px; text-align:center;">
-      <!-- If you want extra buttons inside the box area keep them here -->
-      <a class="btn-classic" href="index.html">Back to Login</a>
-    </div>
+<!-- Feedback Modal -->
+<div id="feedback-modal">
+  <div id="feedback-content">
+    <h3>Send Feedback</h3>
+    <textarea id="feedback-text" placeholder="Type your feedback here..."></textarea>
+    <button id="send-feedback">Send</button>
+    <button id="close-feedback">Cancel</button>
   </div>
+</div>
 
-  <!-- Floating (corner) buttons -->
-  <a id="records-btn" class="floating-btn" href="User History.html" aria-label="My Records">📖 My Records</a>
-  <a id="feedback-btn" class="floating-btn" href="Feedback.html" aria-label="Send Feedback">💬 Send Feedback</a>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+    authDomain: "edvore-b11b7.firebaseapp.com",
+    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
+    projectId: "edvore-b11b7",
+    storageBucket: "edvore-b11b7.appspot.com",
+    messagingSenderId: "239809584061",
+    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
 
+  // Feedback button logic
+  const feedbackButton = document.getElementById('feedback-button');
+  const feedbackModal = document.getElementById('feedback-modal');
+  const closeFeedback = document.getElementById('close-feedback');
+  const sendFeedback = document.getElementById('send-feedback');
+  const feedbackText = document.getElementById('feedback-text');
+
+  feedbackButton.addEventListener('click', () => {
+    feedbackModal.style.display = 'flex';
+  });
+  closeFeedback.addEventListener('click', () => {
+    feedbackModal.style.display = 'none';
+    feedbackText.value = '';
+  });
+  sendFeedback.addEventListener('click', () => {
+    const text = feedbackText.value.trim();
+    if (text !== "") {
+      const feedbackRef = database.ref('feedbacks');
+      feedbackRef.push({
+        message: text,
+        timestamp: Date.now()
+      }).then(() => {
+        alert("Feedback sent! Thank you.");
+        feedbackModal.style.display = 'none';
+        feedbackText.value = '';
+      }).catch(err => {
+        alert("Error sending feedback: " + err);
+      });
+    } else {
+      alert("Please enter feedback before sending.");
+    }
+  });
+</script>
 </body>
-        </html>
+  </html>
