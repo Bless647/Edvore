@@ -1,168 +1,199 @@
 <!DOCTYPE html>
-<html>
-<header>
-    
-    <div class="Bless"></div>
-  </header>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>My Details</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Bless</title>
   <style>
-    
-
-
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    
     body {
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #2a2a2a, #222); 
+      background: linear-gradient(135deg, #2a2a2a, #222);
       color: white;
-      line-height: 1.6;
+      margin: 0;
+      padding: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
-  
     header {
       text-align: center;
-      padding: 50px 20px;
-      background: rgba(0, 0, 0, 0.7);
-      position: relative;
-    }
-
-    
-    .Bless {
-      width: 150px;
-      padding: 110px;
-      height: 150px; 
-      border-radius: 50%;
-      margin-top: 20px;
-      background: url('Bless.jpg') no-repeat center center;
-      background-size: cover;
-      border: 2px solid white; 
-      background-color: #white; 
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 3.0);
-      position: absolute;
-      top: 30px;
-      left: 41%;
-    }
-
-    
-    nav ul {
-      list-style-type: none;
-      margin-top: 160px;
-    }
-
-    nav ul li {
-      display: inline-block;
-      margin: 0 15px;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      padding: 12px 25px;
-      background-color: #333;
-      border-radius: 5px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    nav ul li a:hover {
-      background-color: #00FFFF;
-      color: #222;
-      transform: scale(1.1);
-      text-shadow: 0 0 10px #00FFFF; 
-    }
-
-    
-    .intro {
-      text-align: center;
-      margin: 15% 0;
       padding: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      box-align: center;
+      background: rgba(0, 0, 0, 0.7);
     }
 
-    .intro h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: whitesmoke; 
-      font-weight: bold;
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: cyan;
     }
 
-    .intro p {
-      font-size: 1.3rem;
-      color: #ddd;
-      margin-bottom: 20px;
+    .container {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
     }
 
-    .intro a {
-      font-size: 1.6em;
-      color: springgreen; 
-      text-decoration: none;
-      border: 2px solid lightblue;
-      padding: 10px 30px;
-      border-radius: 5px;
-      transition: all 0.3s ease;
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
     }
 
-    .intro a:hover {
-      background-color: black;
-      color: whitesmoke;
-      text-shadow: 0 0 10px royalblue; 
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-   
+    th {
+      background: rgba(0, 0, 0, 0.8);
+      font-size: 1.1rem;
+    }
+
+    tr:hover {
+      background: rgba(0, 255, 255, 0.1);
+    }
+
+    .toggle {
+      position: relative;
+      width: 50px;
+      height: 25px;
+      background: #444;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: auto;
+    }
+
+    .toggle.active {
+      background: #00ffcc;
+    }
+
+    .toggle-circle {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 19px;
+      height: 19px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle.active .toggle-circle {
+      transform: translateX(25px);
+    }
+
     footer {
       text-align: center;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.7);
     }
-
-      nav ul li {
-        display: block;
-        margin: 10px 0;
-      }
-
-      .intro h2 {
-        font-size: 2.2rem;
-      }
-
-      .intro p {
-        font-size: 1.2rem;
-        border: solid;
-        border-radius: 20px;
-        text-align: center;
-        padding: 50px;
-        margin-top: 5%;
-      }
-
-      .Bless {
-        width: 120px; 
-        height: 120px; 
-      }
-    }
-
   </style>
-  <section class="intro">
-  <h1>Welcome, Hlabangwane Blessing</h1>
-  <a href ="Subjects.html">Continue</a>
+</head>
+<body>
+  <header>
+    <h1>Admin Panel - Control Users</h1>
+  </header>
 
-  </section>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Status</th>
+          <th>Days Left</th>
+          <th>Toggle</th>
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <!-- Users will load here -->
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>© 2025 Edvore - Admin Panel</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+      authDomain: "edvore-b11b7.firebaseapp.com",
+      databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
+      projectId: "edvore-b11b7",
+      storageBucket: "edvore-b11b7.appspot.com",
+      messagingSenderId: "239809584061",
+      appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    async function loadUsers() {
+      const usersRef = ref(db, "users_control");
+      const snapshot = await get(usersRef);
+
+      if (snapshot.exists()) {
+        const users = snapshot.val();
+        const table = document.getElementById("userTable");
+        table.innerHTML = "";
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+
+          // calculate days left
+          let daysLeft = "N/A";
+          if (user.expiresAt) {
+            const now = Date.now();
+            const diff = user.expiresAt - now;
+            daysLeft = diff > 0 ? Math.floor(diff / (1000 * 60 * 60 * 24)) + " days" : "Expired";
+          }
+
+          // row
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${username}</td>
+            <td>${user.active ? "✅ Active" : "❌ Blocked"}</td>
+            <td>${daysLeft}</td>
+            <td>
+              <div class="toggle ${user.active ? "active" : ""}" data-user="${username}">
+                <div class="toggle-circle"></div>
+              </div>
+            </td>
+          `;
+
+          table.appendChild(row);
+        });
+
+        // add toggle logic
+        document.querySelectorAll(".toggle").forEach(toggle => {
+          toggle.addEventListener("click", async () => {
+            toggle.classList.toggle("active");
+            const username = toggle.getAttribute("data-user");
+            const newStatus = toggle.classList.contains("active");
+
+            await update(ref(db, "users_control/" + username), {
+              active: newStatus
+            });
+
+            loadUsers(); // reload table
+          });
+        });
+      }
+    }
+
+    loadUsers();
+  </script>
 </body>
 </html>
