@@ -3,112 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Edvore</title>
+<title>User Records</title>
 <style>
     body {
         background-color: #121212;
-        color: #ffffff;
         font-family: Arial, sans-serif;
+        color: #ffffff;
+        margin: 0;
+        padding: 20px;
         display: flex;
         justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+        min-height: 100vh;
     }
-    .login-container {
-        background: rgba(0,0,0,0.8);
-        padding: 30px;
+    .container {
+        width: 95%;
+        max-width: 900px;
+        background: rgba(0,0,0,0.7);
         border-radius: 12px;
-        width: 300px;
+        padding: 20px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        text-align: center;
     }
-    .login-container h2 {
+    h1 {
+        text-align: center;
         margin-bottom: 20px;
     }
-    .login-container input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border-radius: 6px;
-        border: none;
+    .record {
+        background-color: #1e1e1e;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
-    #loginBtn {
-        padding: 10px 20px;
+    .record span { display: block; }
+    .correct { color: #00ff00; font-weight: bold; }
+    .incorrect { color: #ff4d4d; font-weight: bold; }
+    .record button {
+        margin-top: 5px;
+        padding: 6px 12px;
+        background-color: #ff4d4d;
         border: none;
-        border-radius: 6px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+    }
+    #backBtn {
+        margin-top: 20px;
+        padding: 12px 25px;
         background-color: #007bff;
+        border: none;
+        border-radius: 8px;
         color: white;
         font-size: 1em;
         cursor: pointer;
-        width: 100%;
-        transition: 0.3s;
-    }
-    #loginBtn:hover {
-        background-color: #0056b3;
     }
 </style>
 </head>
 <body>
-<div class="login-container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
+<div class="container">
+    <h1>My Quiz Records</h1>
+    <div id="records-container"></div>
+    <button id="backBtn" onclick="goBack()">Back to Subjects</button>
 </div>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-        authDomain: "edvore-b11b7.firebaseapp.com",
-        databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
-        projectId: "edvore-b11b7",
-        storageBucket: "edvore-b11b7.appspot.com",
-        messagingSenderId: "239809584061",
-        appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+const firebaseConfig = {
+    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+    authDomain: "edvore-b11b7.firebaseapp.com",
+    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
+    projectId: "edvore-b11b7",
+    storageBucket: "edvore-b11b7.appspot.com",
+    messagingSenderId: "239809584061",
+    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-    const loginBtn = document.getElementById("loginBtn");
+const recordsContainer = document.getElementById("records-container");
+const username = localStorage.getItem("username");
 
-    loginBtn.addEventListener("click", function() {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
+function goBack() { window.location.href = "subjects.html"; }
 
-        if (!username || !password) {
-            alert("Please enter username and password.");
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+}
+
+function loadRecords() {
+    recordsContainer.innerHTML = "<p>Loading your records...</p>";
+
+    database.ref('Quiz_Submissions').orderByChild('username').equalTo(username).on('value', snapshot => {
+        recordsContainer.innerHTML = "";
+        if (!snapshot.exists()) {
+            recordsContainer.innerHTML = "<p>No records found.</p>";
             return;
         }
+        const data = snapshot.val();
+        for (let key in data) {
+            const record = data[key];
+            const div = document.createElement("div");
+            div.className = "record";
 
-        // First, get user data
-        database.ref('Users/' + username).once('value').then(userSnap => {
-            const userData = userSnap.val();
+            const subject = document.createElement("span");
+            subject.innerHTML = `<strong>Subject:</strong> ${record.subject || "N/A"}`;
 
-            if (!userData) {
-                alert("Invalid username or password.");
-                return;
+            const timestamp = document.createElement("span");
+            timestamp.innerHTML = `<strong>Time:</strong> ${formatTimestamp(record.timestamp)}`;
+
+            const score = document.createElement("span");
+            score.innerHTML = `<strong>Score:</strong> ${record.score}/${record.total}`;
+
+            const answersList = document.createElement("div");
+            for (let i = 0; i < record.answers.length; i++) {
+                const ansSpan = document.createElement("span");
+                const isCorrect = record.answers[i] === record.correctAnswers[i];
+                ansSpan.innerHTML = `<strong>Q${i+1}:</strong> ${record.questions[i]}<br>
+                    Your answer: <span class="${isCorrect ? "correct" : "incorrect"}">${record.answers[i]}</span> | Correct: ${record.correctAnswers[i]}`;
+                answersList.appendChild(ansSpan);
             }
 
-            // Check if paid toggle is ON
-            if (!userData.paid) {
-                alert("You haven’t paid yet. Please contact the admin.");
-                return; // stop login, user cannot access anything
-            }
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete Record";
+            deleteBtn.onclick = () => {
+                if (confirm("Are you sure you want to delete this record?")) {
+                    database.ref('Quiz_Submissions/' + key).remove()
+                        .then(() => { div.remove(); })
+                        .catch(err => alert("Error deleting record: " + err));
+                }
+            };
 
-            // Check password only if paid
-            if (userData.password === password) {
-                localStorage.setItem("username", username);
-                window.location.href = "subjects.html"; // redirect only if paid
-            } else {
-                alert("Invalid username or password.");
-            }
-        });
+            div.appendChild(subject);
+            div.appendChild(timestamp);
+            div.appendChild(score);
+            div.appendChild(answersList);
+            div.appendChild(deleteBtn);
+            recordsContainer.appendChild(div);
+        }
     });
+}
+
+// ----- PAGE LOAD PROTECTION -----
+window.onload = function() {
+    if (!username) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    database.ref('Users/' + username + '/paid').once('value').then(snapshot => {
+        const hasPaid = snapshot.val();
+        if (!hasPaid) {
+            alert("You haven’t paid yet. Please contact the admin.");
+            localStorage.removeItem("username"); // force logout
+            window.location.href = "login.html"; // redirect to login
+            return;
+        }
+        loadRecords();
+    });
+};
 </script>
 </body>
-                                   </html>
+</html>
