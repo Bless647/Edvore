@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Choose a Subject</title>
+  <title>Subjects</title>
   <style>
     body {
       background-color: #121212;
@@ -11,9 +11,6 @@
       color: white;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
 
     .menu-container {
@@ -22,30 +19,24 @@
       margin-top: 50px;
       background: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
-      width: 90%;
+      width: 80%;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px; /* spacing between buttons */
     }
 
     h1 {
       font-size: 2.5em;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
     }
 
     h3 {
       font-size: 1.6em;
-      margin-bottom: 20px;
+      margin: 20px 0;
       color: #fff;
     }
 
     button {
-      width: 80%; /* make all buttons same width */
-      max-width: 300px;
       padding: 12px 30px;
       background: linear-gradient(145deg, #56ccf2, #2f80ed);
       color: white;
@@ -54,12 +45,17 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      margin: 10px;
       transition: background-color 0.3s, transform 0.2s;
     }
 
     button:hover {
       background: linear-gradient(145deg, #2f80ed, #56ccf2);
-      transform: scale(1.05);
+      transform: scale(1.1);
+    }
+
+    button:active {
+      transform: scale(1);
     }
 
     button:focus {
@@ -67,11 +63,36 @@
       box-shadow: 0 0 5px #56ccf2;
     }
 
-    /* Feedback button (bottom-right) */
-    #feedback-button {
+    nav ul {
+      list-style-type: none;
+      margin-top: 30px;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin-top: 15px;
+      font-size: 1.2em;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 30px;
+      background: #333;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background: #555;
+    }
+
+    /* My Records button (bottom-left floating) */
+    #records-button {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      left: 20px;
       background: #2f80ed;
       color: white;
       padding: 12px 20px;
@@ -83,31 +104,8 @@
       z-index: 1000;
     }
 
-    #feedback-button:hover {
+    #records-button:hover {
       background: #56ccf2;
-      transform: scale(1.1);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
-
-    /* My Records button (bottom-left) */
-    .records-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #27ae60;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 50px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
-      z-index: 1000;
-    }
-
-    .records-btn:hover {
-      background: #2ecc71;
       transform: scale(1.1);
       box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
@@ -115,25 +113,25 @@
 </head>
 <body>
 
-  <div class="menu-container">
-    <h1>Choose a Subject</h1>
-    <h3>Select one of the options below:</h3>
+<div class="menu-container">
+  <h1>Choose a Subject</h1>
+  <h3>Select one of the options below:</h3>
 
-    <button onclick="window.location.href='History.html'">History</button>
-    <button onclick="window.location.href='Geography.html'">Geography</button>
-    <button onclick="window.location.href='Maths.html'">Maths</button>
-    <button onclick="window.location.href='Natural-Science.html'">Natural Science</button>
-    <button onclick="window.location.href='English.html'">English</button>
+  <button onclick="window.location.href='History.html'">History</button>
+  <button onclick="window.location.href='Geography.html'">Geography</button>
+  <button onclick="window.location.href='Maths.html'">Maths</button>
+  <button onclick="window.location.href='Natural Science.html'">Natural Science</button>
+  <button onclick="window.location.href='English.html'">English</button>
 
-    <button onclick="window.location.href='login.html'">Back</button>
-  </div>
+  <nav>
+    <ul>
+      <li><a href="login.html">Back</a></li>
+    </ul>
+  </nav>
+</div>
 
-  <!-- Feedback Button -->
-  <div id="feedback-button">💬 Send Feedback</div>
-
-  <!-- My Records Button -->
-  <a href="User History.html" class="records-btn">📁 My Records</a>
+<!-- My Records button -->
+<a id="records-button" href="User History.html">📖 My Records</a>
 
 </body>
-</html>
-
+  </html>
