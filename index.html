@@ -47,13 +47,11 @@
                         return;
                     }
 
-                    // Check toggle: if user is not active and not Bless, block login
                     if (user.active === false && username !== "Bless") {
                         alert("You haven’t paid yet. Please contact the admin.");
-                        return; // stay on login page
+                        return;
                     }
 
-                    // Check password
                     if (user.password === password) {
                         localStorage.setItem("username", username);
                         if (rememberMe) {
@@ -61,14 +59,11 @@
                         } else {
                             localStorage.removeItem("rememberMe");
                         }
-
-                        // Redirect to user's page
                         window.location.href = user.username + ".html";
                     } else {
                         alert("Invalid username or password");
                     }
 
-                    // Log the attempt
                     await push(ref(database, 'loginAttempts'), {  
                         username: username,  
                         success: user.password === password,  
@@ -80,7 +75,6 @@
                 }
             });  
 
-            // Auto-fill username if remembered  
             const savedUsername = localStorage.getItem("username");  
             const rememberStatus = localStorage.getItem("rememberMe");  
             if (savedUsername && rememberStatus) {  
@@ -88,14 +82,25 @@
                 document.getElementById("remember").checked = true;  
             }  
 
-            // Show/Hide password functionality
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
+
+            // SVG icons
+            const eyeSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                <path d="M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/>
+            </svg>`;
+            const eyeSlashSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.359 11.238C14.279 10.187 15 8.895 15 8s-3-5.5-8-5.5c-1.3 0-2.518.345-3.586.951L13.36 11.238z"/>
+                <path d="M2.354 1.646a.5.5 0 0 1 .707 0l11 11a.5.5 0 0 1-.707.707l-11-11a.5.5 0 0 1 0-.707z"/>
+            </svg>`;
+
+            togglePassword.innerHTML = eyeSVG;
 
             togglePassword.addEventListener('click', () => {
                 const type = passwordInput.type === 'password' ? 'text' : 'password';
                 passwordInput.type = type;
-                togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+                togglePassword.innerHTML = type === 'password' ? eyeSVG : eyeSlashSVG;
             });
         });  
     </script>  
@@ -120,13 +125,12 @@
                 <input type="password" id="password" name="password" required placeholder="Enter your password">  
                 <span id="togglePassword" style="
                     position:absolute;
-                    right:10px;
+                    right:12px;
                     top:50%;
                     transform:translateY(-50%);
                     cursor:pointer;
-                    font-size:18px;
                     color:#ccc;
-                ">👁️</span>
+                "></span>
             </div>  
 
             <div class="remember-group">  
