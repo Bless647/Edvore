@@ -183,9 +183,23 @@
             const username = toggle.getAttribute("data-user");
             const newStatus = toggle.classList.contains("active");
 
-            await update(ref(db, "users_control/" + username), {
-              active: newStatus
-            });
+            if (newStatus) {
+              // Turning ON → set activation & expiry
+              const activatedAt = Date.now();
+              const subscriptionDays = 31; // default
+              const expiresAt = activatedAt + subscriptionDays * 24 * 60 * 60 * 1000;
+
+              await update(ref(db, "users_control/" + username), {
+                active: true,
+                activatedAt: activatedAt,
+                expiresAt: expiresAt
+              });
+            } else {
+              // Turning OFF → only deactivate
+              await update(ref(db, "users_control/" + username), {
+                active: false
+              });
+            }
 
             loadUsers(); // reload table
           });
