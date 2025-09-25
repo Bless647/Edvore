@@ -1,159 +1,155 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Login</title>  
-    <link rel="stylesheet" href="style201.css">  
-    <style>
-        .password-wrapper {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
-            fill: #888;
-        }
-        .toggle-password:hover {
-            fill: #007bff;
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" href="style201.css">
+<style>
+    .input-icon-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .input-icon-container input {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+    .input-icon-container .icon-left {
+        position: absolute;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .input-icon-container .icon-right {
+        position: absolute;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+</style>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
+    import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
 
-    <script type="module">  
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
-        import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
+    const firebaseConfig = {  
+      apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
+      authDomain: "edvore-b11b7.firebaseapp.com",  
+      databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",  
+      projectId: "edvore-b11b7",  
+      storageBucket: "edvore-b11b7.appspot.com",  
+      messagingSenderId: "239809584061",  
+      appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"  
+    };  
 
-        const firebaseConfig = {  
-          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
-          authDomain: "edvore-b11b7.firebaseapp.com",  
-          databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",  
-          projectId: "edvore-b11b7",  
-          storageBucket: "edvore-b11b7.appspot.com",  
-          messagingSenderId: "239809584061",  
-          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"  
-        };  
+    const app = initializeApp(firebaseConfig);  
+    const database = getDatabase(app);
 
-        const app = initializeApp(firebaseConfig);  
-        const database = getDatabase(app);  
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const toggleEye = document.getElementById('toggleEye');
 
-        document.addEventListener('DOMContentLoaded', () => {  
-            const loginForm = document.getElementById('loginForm');  
-            const passwordInput = document.getElementById('password');
-            const togglePassword = document.getElementById('togglePassword');
+        // Toggle password visibility
+        toggleEye.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleEye.src = "icons/eye-off.png"; // eye with slash
+            } else {
+                passwordInput.type = 'password';
+                toggleEye.src = "icons/eye.png"; // normal eye
+            }
+        });
 
-            // Toggle password visibility
-            togglePassword.addEventListener('click', () => {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                togglePassword.innerHTML = type === 'password' ? eyeIcon : eyeSlashIcon;
-            });
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = passwordInput.value.trim();
+            const rememberMe = document.getElementById('remember').checked;
 
-            const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="toggle-password" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5z"/></svg>`;
-            const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="toggle-password" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7c1.91 0 3.68-.5 5.19-1.36l-1.45-1.45c-1.1.63-2.36.81-3.74.81-2.76 0-5-2.24-5-5 0-1.38.53-2.64 1.41-3.6L6.41 6.41 5 7.82 7.59 10.41l-.01.01 2.09 2.09L12 15c2.76 0 5-2.24 5-5 0-1.38-.53-2.64-1.41-3.6l1.45-1.45C15.68 5.5 13.91 5 12 5z"/></svg>`;
+            if (!username || !password) {
+                alert("Enter username and password.");
+                return;
+            }
 
-            togglePassword.innerHTML = eyeIcon;
+            try {
+                const snapshot = await get(child(ref(database), 'users_control/' + username));
+                const user = snapshot.val();
 
-            loginForm.addEventListener('submit', async (event) => {  
-                event.preventDefault();  
-
-                const username = document.getElementById('username').value.trim();  
-                const password = passwordInput.value.trim();  
-                const rememberMe = document.getElementById('remember').checked;  
-
-                if (!username || !password) {
-                    alert("Enter username and password.");
+                if (!user) {
+                    alert("Invalid username or password");
                     return;
                 }
 
-                try {
-                    const snapshot = await get(child(ref(database), 'users_control/' + username));
-                    const user = snapshot.val();
-
-                    if (!user) {
-                        alert("Invalid username or password");
-                        return;
-                    }
-
-                    // Check toggle: if user is not active and not Bless, block login
-                    if (user.active === false && username !== "Bless") {
-                        alert("You haven’t paid yet. Please contact the admin.");
-                        return; // stay on login page
-                    }
-
-                    // Check password
-                    if (user.password === password) {
-                        localStorage.setItem("username", username);
-                        if (rememberMe) {
-                            localStorage.setItem("rememberMe", "true");
-                        } else {
-                            localStorage.removeItem("rememberMe");
-                        }
-
-                        // Redirect to user's page
-                        window.location.href = user.username + ".html";
-                    } else {
-                        alert("Invalid username or password");
-                    }
-
-                    // Log the attempt
-                    await push(ref(database, 'loginAttempts'), {  
-                        username: username,  
-                        success: user.password === password,  
-                        timestamp: Date.now()  
-                    });
-
-                } catch (err) {
-                    alert("Error accessing Firebase: " + err);
+                // Block login if toggle is off (except Bless)
+                if (user.active === false && username !== "Bless") {
+                    alert("You haven’t paid yet. Please contact the admin.");
+                    return;
                 }
-            });  
 
-            // Auto-fill username if remembered  
-            const savedUsername = localStorage.getItem("username");  
-            const rememberStatus = localStorage.getItem("rememberMe");  
-            if (savedUsername && rememberStatus) {  
-                document.getElementById("username").value = savedUsername;  
-                document.getElementById("remember").checked = true;  
-            }  
-        });  
-    </script>  
-</head>  
-<body>  
+                if (user.password === password) {
+                    localStorage.setItem("username", username);
+                    if (rememberMe) localStorage.setItem("rememberMe", "true");
+                    else localStorage.removeItem("rememberMe");
 
-<div class="login-container">  
-    <div class="login-form">  
-        <div class="logo">  
-            <img src="logo.jpeg" alt="Logo" id="logo">  
-        </div>  
+                    window.location.href = user.username + ".html";
+                } else {
+                    alert("Invalid username or password");
+                }
 
-        <form id="loginForm">  
-            <div class="input-group">  
-                <label for="username">Username</label>  
-                <input type="text" id="username" name="username" required placeholder="Enter your username">  
-            </div>  
+                await push(ref(database, 'loginAttempts'), {  
+                    username: username,  
+                    success: user.password === password,  
+                    timestamp: Date.now()  
+                });
 
-            <div class="input-group password-wrapper">  
-                <label for="password">Password</label>  
-                <input type="password" id="password" name="password" required placeholder="Enter your password">  
-                <span id="togglePassword"></span>
-            </div>  
+            } catch (err) {
+                alert("Error accessing Firebase: " + err);
+            }
+        });
 
-            <div class="remember-group">  
-                <label for="remember">  
-                    <input type="checkbox" id="remember" name="remember"> Remember me  
-                </label>  
-            </div>  
+        const savedUsername = localStorage.getItem("username");  
+        const rememberStatus = localStorage.getItem("rememberMe");  
+        if (savedUsername && rememberStatus) {  
+            document.getElementById("username").value = savedUsername;  
+            document.getElementById("remember").checked = true;  
+        }
+    });
+</script>
+</head>
+<body>
 
-            <div class="button-group">  
-                <button type="submit" id="loginButton">Login</button>  
-            </div>  
-        </form>  
-    </div>  
-</div>  
+<div class="login-container">
+    <div class="login-form">
+        <div class="logo">
+            <img src="logo.jpeg" alt="Logo" id="logo">
+        </div>
 
-</body>  
+        <form id="loginForm">
+            <div class="input-group input-icon-container">
+                <img src="icons/user.png" class="icon-left" alt="User Icon">
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
+            </div>
+
+            <div class="input-group input-icon-container">
+                <img src="icons/key.png" class="icon-left" alt="Key Icon">
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <img src="icons/eye.png" class="icon-right" id="toggleEye" alt="Toggle Password">
+            </div>
+
+            <div class="remember-group">
+                <label for="remember">
+                    <input type="checkbox" id="remember" name="remember"> Remember me
+                </label>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="loginButton">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
 </html>
