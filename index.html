@@ -6,27 +6,48 @@
 <title>Login</title>
 <link rel="stylesheet" href="style201.css">
 <style>
-    .input-icon-container {
-        position: relative;
+    /* Preserve your existing styles */
+    .login-container {
         display: flex;
+        justify-content: center;
         align-items: center;
+        min-height: 100vh;
     }
-    .input-icon-container input {
-        padding-left: 35px;
-        padding-right: 35px;
+    .login-form {
+        background: rgba(0,0,0,0.8);
+        padding: 30px;
+        border-radius: 12px;
+        width: 300px;
+        text-align: center;
     }
-    .input-icon-container .icon-left {
-        position: absolute;
-        left: 10px;
-        width: 20px;
-        height: 20px;
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: none;
     }
-    .input-icon-container .icon-right {
+    button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .password-container {
+        position: relative;
+    }
+    .toggle-password {
         position: absolute;
         right: 10px;
-        width: 24px;
-        height: 24px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
+        font-size: 16px;
+        color: #888;
     }
 </style>
 <script type="module">
@@ -49,16 +70,15 @@
     document.addEventListener('DOMContentLoaded', () => {
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('password');
-        const toggleEye = document.getElementById('toggleEye');
+        const togglePassword = document.getElementById('togglePassword');
 
-        // Toggle password visibility
-        toggleEye.addEventListener('click', () => {
+        togglePassword.addEventListener('click', () => {
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleEye.src = "icons/eye-off.png"; // eye with slash
+                togglePassword.textContent = '🙈';
             } else {
                 passwordInput.type = 'password';
-                toggleEye.src = "icons/eye.png"; // normal eye
+                togglePassword.textContent = '👁️';
             }
         });
 
@@ -82,7 +102,6 @@
                     return;
                 }
 
-                // Block login if toggle is off (except Bless)
                 if (user.active === false && username !== "Bless") {
                     alert("You haven’t paid yet. Please contact the admin.");
                     return;
@@ -127,15 +146,13 @@
         </div>
 
         <form id="loginForm">
-            <div class="input-group input-icon-container">
-                <img src="icons/user.png" class="icon-left" alt="User Icon">
+            <div class="input-group">
                 <input type="text" id="username" name="username" required placeholder="Enter your username">
             </div>
 
-            <div class="input-group input-icon-container">
-                <img src="icons/key.png" class="icon-left" alt="Key Icon">
+            <div class="input-group password-container">
                 <input type="password" id="password" name="password" required placeholder="Enter your password">
-                <img src="icons/eye.png" class="icon-right" id="toggleEye" alt="Toggle Password">
+                <span class="toggle-password" id="togglePassword">👁️</span>
             </div>
 
             <div class="remember-group">
