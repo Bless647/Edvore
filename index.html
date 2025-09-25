@@ -1,119 +1,165 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Login</title>  
-    <link rel="stylesheet" href="style201.css">  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+    /* Body & container */
+    body {
+        background: #121212;
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .login-container {
+        background: rgba(0,0,0,0.8);
+        padding: 30px;
+        border-radius: 12px;
+        width: 300px;
+        text-align: center;
+    }
 
-    <script type="module">  
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";  
-        import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";  
+    /* Logo styling */
+    .logo {
+        margin-bottom: 20px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures the image covers the circle fully */
+        display: block;
+    }
 
-        const firebaseConfig = {  
-          apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",  
-          authDomain: "edvore-b11b7.firebaseapp.com",  
-          databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",  
-          projectId: "edvore-b11b7",  
-          storageBucket: "edvore-b11b7.appspot.com",  
-          messagingSenderId: "239809584061",  
-          appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"  
-        };  
+    /* Inputs & buttons */
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: none;
+        font-size: 1em;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
 
-        const app = initializeApp(firebaseConfig);  
-        const database = getDatabase(app);  
+<div class="login-container">
+    <div class="logo">
+        <img src="logo.jpeg" alt="Logo">
+    </div>
 
-        document.addEventListener('DOMContentLoaded', () => {  
-            const loginForm = document.getElementById('loginForm');  
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <label>
+            <input type="checkbox" id="remember"> Remember me
+        </label>
+        <button type="submit">Login</button>
+    </form>
+</div>
 
-            loginForm.addEventListener('submit', async (event) => {  
-                event.preventDefault();  
+<!-- Firebase JS -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-                const username = document.getElementById('username').value.trim();  
-                const password = document.getElementById('password').value.trim();  
-                const rememberMe = document.getElementById('remember').checked;  
+    const firebaseConfig = {
+        apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+        authDomain: "edvore-b11b7.firebaseapp.com",
+        databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
+        projectId: "edvore-b11b7",
+        storageBucket: "edvore-b11b7.appspot.com",
+        messagingSenderId: "239809584061",
+        appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
 
-                if (!username || !password) {
-                    alert("Enter username and password.");
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const rememberMe = document.getElementById('remember').checked;
+
+            if (!username || !password) {
+                alert("Enter username and password.");
+                return;
+            }
+
+            try {
+                const snapshot = await get(child(ref(database), 'users_control/' + username));
+                const user = snapshot.val();
+
+                if (!user) {
+                    alert("Invalid username or password");
                     return;
                 }
 
-                try {
-                    const snapshot = await get(child(ref(database), 'users_control/' + username));
-                    const user = snapshot.val();
-
-                    if (!user) {
-                        alert("Invalid username or password");
-                        return;
-                    }
-
-                    if (user.active === false && username !== "Bless") {
-                        alert("You haven’t paid yet. Please contact the admin.");
-                        return;
-                    }
-
-                    if (user.password === password) {
-                        localStorage.setItem("username", username);
-                        if (rememberMe) {
-                            localStorage.setItem("rememberMe", "true");
-                        } else {
-                            localStorage.removeItem("rememberMe");
-                        }
-
-                        window.location.href = user.username + ".html";
-                    } else {
-                        alert("Invalid username or password");
-                    }
-
-                    await push(ref(database, 'loginAttempts'), {  
-                        username: username,  
-                        success: user.password === password,  
-                        timestamp: Date.now()  
-                    });
-
-                } catch (err) {
-                    alert("Error accessing Firebase: " + err);
+                // Toggle check: allow Bless regardless
+                if (user.active === false && username !== "Bless") {
+                    alert("You haven’t paid yet. Please contact the admin.");
+                    return;
                 }
-            });  
 
-            const savedUsername = localStorage.getItem("username");  
-            const rememberStatus = localStorage.getItem("rememberMe");  
-            if (savedUsername && rememberStatus) {  
-                document.getElementById("username").value = savedUsername;  
-                document.getElementById("remember").checked = true;  
-            }  
-        });  
-    </script>  
-</head>  
-<body>  
+                if (user.password === password) {
+                    localStorage.setItem("username", username);
+                    if (rememberMe) {
+                        localStorage.setItem("rememberMe", "true");
+                    } else {
+                        localStorage.removeItem("rememberMe");
+                    }
+                    window.location.href = user.username + ".html";
+                } else {
+                    alert("Invalid username or password");
+                }
 
-<div class="login-container">  
-    <div class="login-form">  
-        <div class="logo">  
-            <img src="logo.jpeg" alt="Logo" id="logo">  
-        </div>  
+                await push(ref(database, 'loginAttempts'), {
+                    username: username,
+                    success: user.password === password,
+                    timestamp: Date.now()
+                });
+            } catch (err) {
+                alert("Error accessing Firebase: " + err);
+            }
+        });
 
-        <form id="loginForm">  
-            <div class="input-group">  
-                <input type="text" id="username" name="username" required placeholder="Enter your username">  
-            </div>  
-
-            <div class="input-group">  
-                <input type="password" id="password" name="password" required placeholder="Enter your password">  
-            </div>  
-
-            <div class="remember-group">  
-                <label for="remember">  
-                    <input type="checkbox" id="remember" name="remember"> Remember me  
-                </label>  
-            </div>  
-
-            <div class="button-group">  
-                <button type="submit" id="loginButton">Login</button>  
-            </div>  
-        </form>  
-    </div>  
-</div>  
-
-</body>  
+        // Auto-fill username if remembered
+        const savedUsername = localStorage.getItem("username");
+        const rememberStatus = localStorage.getItem("rememberMe");
+        if (savedUsername && rememberStatus) {
+            document.getElementById("username").value = savedUsername;
+            document.getElementById("remember").checked = true;
+        }
+    });
+</script>
+</body>
 </html>
