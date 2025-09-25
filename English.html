@@ -37,90 +37,125 @@
     <button class="submit-btn" id="submit" onclick="submitQuiz()">Submit Quiz</button>
 </div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
-    authDomain: "edvore-b11b7.firebaseapp.com",
-    databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
-    projectId: "edvore-b11b7",
-    storageBucket: "edvore-b11b7.appspot.com",
-    messagingSenderId: "239809584061",
-    appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+    // Firebase config
+    const firebaseConfig = {
+        apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+        authDomain: "edvore-b11b7.firebaseapp.com",
+        databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com",
+        projectId: "edvore-b11b7",
+        storageBucket: "edvore-b11b7.appspot.com",
+        messagingSenderId: "239809584061",
+        appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-const questions = [
-    { quest:"1. What is a verb?", a:"It describes a noun", b:"A doing word", c:"It describes an adjective", correct:"b" },
-    { quest:"2. Which word is a synonym for happy?", a:"Sad", b:"Angry", c:"Joyful", correct:"c" },
-    { quest:"3. What is the past tense of 'go'?", a:"Went", b:"Gone", c:"Go", correct:"a" },
-    { quest:"4. Which word is an antonym for big?", a:"Small", b:"Medium", c:"Large", correct:"a" },
-    { quest:"5. What is the plural form of 'tooth'?", a:"Teeth", b:"Tooths", c:"Tooth", correct:"a" },
-    { quest:"6. Which word is a synonym for fast?", a:"Quick", b:"Slow", c:"Sluggish", correct:"a" },
-    { quest:"7. What is the present participle of 'run'?", a:"Run", b:"Running", c:"Ran", correct:"b" },
-    { quest:"8. Which word is an antonym for old?", a:"Young", b:"Ancient", c:"Elderly", correct:"a" },
-    { quest:"9. Past perfect tense of 'eat'?", a:"Had eaten", b:"Eats", c:"Eating", correct:"a" },
-    { quest:"10. Which word is a synonym for good?", a:"Excellent", b:"Bad", c:"Poor", correct:"a" },
-    { quest:"11. Which is an adjective?", a:"Quickly", b:"Beautiful", c:"Run", correct:"b" },
-    { quest:"12. Which is a pronoun?", a:"They", b:"Cat", c:"Beautiful", correct:"a" },
-    { quest:"13. What is the superlative of 'good'?", a:"Better", b:"Best", c:"Goodest", correct:"b" },
-    { quest:"14. Identify the noun: 'The dog runs fast.'", a:"Dog", b:"Runs", c:"Fast", correct:"a" },
-    { quest:"15. Which word is a preposition?", a:"Under", b:"Jump", c:"Quick", correct:"a" },
-    { quest:"16. Which sentence is correct?", a:"He go to school", b:"He goes to school", c:"He going school", correct:"b" },
-    { quest:"17. Choose correct spelling:", a:"Recieve", b:"Receive", c:"Receve", correct:"b" },
-    { quest:"18. Which is a conjunction?", a:"And", b:"Quick", c:"Dog", correct:"a" },
-    { quest:"19. Which word is an adverb?", a:"Quickly", b:"Quick", c:"Fast", correct:"a" },
-    { quest:"20. Past tense of 'run'?", a:"Ran", b:"Running", c:"Runned", correct:"a" }
-];
+    const questions = [
+        { quest:"1. What is a verb?", a:"It describes a noun", b:"A doing word", c:"It describes an adjective", correct:"b" },
+        { quest:"2. Which word is a synonym for happy?", a:"Sad", b:"Angry", c:"Joyful", correct:"c" },
+        { quest:"3. What is the past tense of 'go'?", a:"Went", b:"Gone", c:"Go", correct:"a" },
+        { quest:"4. Which word is an antonym for big?", a:"Small", b:"Medium", c:"Large", correct:"a" },
+        { quest:"5. What is the plural form of 'tooth'?", a:"Teeth", b:"Tooths", c:"Tooth", correct:"a" },
+        { quest:"6. Which word is a synonym for fast?", a:"Quick", b:"Slow", c:"Sluggish", correct:"a" },
+        { quest:"7. What is the present participle of 'run'?", a:"Run", b:"Running", c:"Ran", correct:"b" },
+        { quest:"8. Which word is an antonym for old?", a:"Young", b:"Ancient", c:"Elderly", correct:"a" },
+        { quest:"9. Past perfect tense of 'eat'?", a:"Had eaten", b:"Eats", c:"Eating", correct:"a" },
+        { quest:"10. Which word is a synonym for good?", a:"Excellent", b:"Bad", c:"Poor", correct:"a" },
+        { quest:"11. Which is an adjective?", a:"Quickly", b:"Beautiful", c:"Run", correct:"b" },
+        { quest:"12. Which is a pronoun?", a:"They", b:"Cat", c:"Beautiful", correct:"a" },
+        { quest:"13. What is the superlative of 'good'?", a:"Better", b:"Best", c:"Goodest", correct:"b" },
+        { quest:"14. Identify the noun: 'The dog runs fast.'", a:"Dog", b:"Runs", c:"Fast", correct:"a" },
+        { quest:"15. Which word is a preposition?", a:"Under", b:"Jump", c:"Quick", correct:"a" },
+        { quest:"16. Which sentence is correct?", a:"He go to school", b:"He goes to school", c:"He going school", correct:"b" },
+        { quest:"17. Choose correct spelling:", a:"Recieve", b:"Receive", c:"Receve", correct:"b" },
+        { quest:"18. Which is a conjunction?", a:"And", b:"Quick", c:"Dog", correct:"a" },
+        { quest:"19. Which word is an adverb?", a:"Quickly", b:"Quick", c:"Fast", correct:"a" },
+        { quest:"20. Past tense of 'run'?", a:"Ran", b:"Running", c:"Runned", correct:"a" }
+    ];
 
-let index=0;
-let userAnswers=[];
-const questEl=document.getElementById("question");
-const progressEl=document.getElementById("progress");
-const answersList=document.getElementById("answers-list");
-const backBtn=document.getElementById("back");
-const submitBtn=document.getElementById("submit");
+    let index = 0;
+    let userAnswers = [];
+    const questEl = document.getElementById("question");
+    const progressEl = document.getElementById("progress");
+    const answersList = document.getElementById("answers-list");
+    const backBtn = document.getElementById("back");
+    const submitBtn = document.getElementById("submit");
 
-function initQuest(){
-    questEl.innerHTML=questions[index].quest;
-    document.getElementById("a").innerHTML="A) "+questions[index].a;
-    document.getElementById("b").innerHTML="B) "+questions[index].b;
-    document.getElementById("c").innerHTML="C) "+questions[index].c;
-    progressEl.innerHTML=`Question ${index+1} of ${questions.length}`;
-    backBtn.style.display="inline-block";
-}
-
-function showFeedback(msg,isCorrect,correctAnswer){
-    const feedback=document.createElement("div");
-    feedback.classList.add("feedback");
-    feedback.style.backgroundColor=isCorrect?"green":"red";
-    feedback.innerHTML=isCorrect?msg:`${msg} (Correct: ${correctAnswer})`;
-    document.body.appendChild(feedback);
-    setTimeout(()=>feedback.remove(),1200);
-}
-
-function chooseAnswer(answer){
-    const correct=questions[index].correct;
-    userAnswers.push({question:questions[index].quest, chosen:answer, correct});
-    showFeedback(answer===correct?"Correct!":"Incorrect!",answer===correct,correct);
-    index++;
-    if(index<questions.length){
-        setTimeout(initQuest,400);
-    }else{
-        setTimeout(endQuiz,400);
+    function initQuest(){
+        questEl.innerHTML = questions[index].quest;
+        document.getElementById("a").innerHTML = "A) " + questions[index].a;
+        document.getElementById("b").innerHTML = "B) " + questions[index].b;
+        document.getElementById("c").innerHTML = "C) " + questions[index].c;
+        progressEl.innerHTML = `Question ${index+1} of ${questions.length}`;
+        backBtn.style.display = "inline-block";
     }
-}
 
-function endQuiz(){
-    questEl.innerHTML="Quiz Completed!";
-    answersList.style.display="none";
-    progressEl.style.display="none";
-    backBtn.style.display="none";
-    submitBtn.style.display="inline-block";
-}
+    function showFeedback(msg,isCorrect,correctAnswer){
+        const feedback = document.createElement("div");
+        feedback.classList.add("feedback");
+        feedback.style.backgroundColor = isCorrect ? "green" : "red";
+        feedback.innerHTML = isCorrect ? msg : `${msg} (Correct: ${correctAnswer})`;
+        document.body.appendChild(feedback);
+        setTimeout(() => feedback.remove(), 1200);
+    }
 
-function quitQuiz(){
-    const username=localStorage.getItem("username")||"Anonymous";
+    function chooseAnswer(answer){
+        const correct = questions[index].correct;
+        userAnswers.push({question: questions[index].quest, chosen: answer, correct});
+        showFeedback(answer === correct ? "Correct!" : "Incorrect!", answer === correct, correct);
+        index++;
+        if(index < questions.length){
+            setTimeout(initQuest, 400);
+        } else {
+            setTimeout(endQuiz, 400);
+        }
+    }
+
+    function endQuiz(){
+        questEl.innerHTML = "Quiz Completed!";
+        answersList.style.display = "none";
+        progressEl.style.display = "none";
+        backBtn.style.display = "none";
+        submitBtn.style.display = "inline-block";
+    }
+
+    function quitQuiz(){
+        const username = localStorage.getItem("username") || "Anonymous";
+        const submissionRef = database.ref('Quiz_Submissions/' + Date.now());
+        submissionRef.set({
+            username,
+            subject: "English",
+            answers: userAnswers,
+            score: userAnswers.filter(a => a.chosen === a.correct).length,
+            completed: false,
+            timestamp: Date.now()
+        })
+        .then(() => window.location.href = "Subjects.html")
+        .catch(err => alert("Error sending partial quiz: " + err));
+    }
+
+    function submitQuiz(){
+        const username = localStorage.getItem("username") || "Anonymous";
+        const submissionRef = database.ref('Quiz_Submissions/' + Date.now());
+        submissionRef.set({
+            username,
+            subject: "English",
+            answers: userAnswers,
+            score: userAnswers.filter(a => a.chosen === a.correct).length,
+            completed: true,
+            timestamp: Date.now()
+        })
+        .then(() => window.location.href = "Subjects.html")
+        .catch(err => alert("Error submitting quiz: " + err));
+    }
+
+    window.onload = initQuest;
+</script>
+
+</body>
+</html>
