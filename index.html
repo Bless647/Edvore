@@ -87,29 +87,26 @@
                 document.getElementById("username").value = savedUsername;  
                 document.getElementById("remember").checked = true;  
             }  
+
+            // Show/Hide password functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+            });
         });  
     </script>  
-
-    <style>
-        /* Fix logo centering and responsiveness */
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo img {
-            max-width: 150px;
-            width: 50%;
-            height: auto;
-            display: inline-block;
-        }
-    </style>
 </head>  
 <body>  
 
 <div class="login-container">  
     <div class="login-form">  
         <div class="logo">  
-            <img src="logo.jpeg" alt="Logo">
+            <img src="logo.jpeg" alt="Logo" id="logo">  
+            <img src="logo.png" alt="Logo" id="logo">  
         </div>  
 
         <form id="loginForm">  
@@ -118,9 +115,18 @@
                 <input type="text" id="username" name="username" required placeholder="Enter your username">  
             </div>  
 
-            <div class="input-group">  
+            <div class="input-group" style="position:relative;">  
                 <label for="password">Password</label>  
                 <input type="password" id="password" name="password" required placeholder="Enter your password">  
+                <span id="togglePassword" style="
+                    position:absolute;
+                    right:10px;
+                    top:50%;
+                    transform:translateY(-50%);
+                    cursor:pointer;
+                    font-size:18px;
+                    color:#ccc;
+                ">👁️</span>
             </div>  
 
             <div class="remember-group">  
