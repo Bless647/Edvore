@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms and Conditions</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #2a2a2a, #222);
+      color: #f5f5f5;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    section h2 {
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+      color: #00e5ff;
+    }
+
+    .buttons {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    button {
+      background: #00e5ff;
+      color: #000;
+      border: none;
+      padding: 12px 25px;
+      margin: 0 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #0088aa;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <header>Terms and Conditions</header>
+
+  <main>
+    <section>
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing and using this platform, you accept and agree to be bound by these Terms and Conditions.</p>
+    </section>
+
+    <section>
+      <h2>2. Account Security</h2>
+      <p>You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p>
+    </section>
+
+    <section>
+      <h2>3. Subscription and Payments</h2>
+      <p>Some features may require a subscription or payment. All fees are non-refundable once processed.</p>
+    </section>
+
+    <section>
+      <h2>4. User Conduct</h2>
+      <p>You agree not to misuse the platform, engage in fraudulent activity, or attempt to disrupt services.</p>
+    </section>
+
+    <section>
+      <h2>5. Intellectual Property</h2>
+      <p>All content, trademarks, and materials on this platform are owned by Edvore or its licensors.</p>
+    </section>
+
+    <section>
+      <h2>6. Limitation of Liability</h2>
+      <p>The platform is provided "as is" and we are not liable for any damages or data loss resulting from usage.</p>
+    </section>
+
+    <section>
+      <h2>7. Termination</h2>
+      <p>We may suspend or terminate your account at our discretion if you violate these Terms.</p>
+    </section>
+
+    <section>
+      <h2>8. Privacy</h2>
+      <p>Your data will be handled in accordance with our Privacy Policy and not shared without consent.</p>
+    </section>
+
+    <div class="buttons">
+      <button id="acceptBtn">Accept</button>
+      <button onclick="window.location.href='index.html'">Decline</button>
+    </div>
+  </main>
+
+  <footer>© 2025 Edvore</footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgdTnXYep_-C6IqaGp1DUuB5gBTBGhx_0",
+      authDomain: "edvore-b11b7.firebaseapp.com",
+      databaseURL: "https://edvore-b11b7-default-rtdb.firebaseio.com/",
+      projectId: "edvore-b11b7",
+      storageBucket: "edvore-b11b7.appspot.com",
+      messagingSenderId: "239809584061",
+      appId: "1:239809584061:web:a20da5cfa66a347c0fd0d4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById("acceptBtn").addEventListener("click", () => {
+      const name = prompt("Please enter your full name to accept the Terms:");
+      if (name && name.trim() !== "") {
+        const userRef = ref(db, "acceptedUsers");
+        push(userRef, {
+          name: name.trim(),
+          date: new Date().toISOString()
+        });
+        alert("Thank you, " + name + "! You have accepted the Terms.");
+        window.location.href = "login.html";
+      } else {
+        alert("You must enter your name to continue.");
+      }
+    });
+  </script>
+</body>
+</html>
